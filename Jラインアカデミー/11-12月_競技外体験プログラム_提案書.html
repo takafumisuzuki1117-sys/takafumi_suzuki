@@ -4,29 +4,37 @@
 <meta charset="UTF-8">
 <title>競技外体験プログラム提案</title>
 <style>
-  @page { size: A4; margin: 12mm; }
+  @page { size: A4; margin: 10mm; }
   * { box-sizing: border-box; }
   body { font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
-         color: #1f2933; background: #fff; margin: 0; font-size: 10.5pt; line-height: 1.55; }
-  .page { max-width: 186mm; margin: 0 auto; padding: 8mm 0; }
-  header { border-bottom: 3px solid #0b4f8a; padding-bottom: 6px; margin-bottom: 10px; }
-  .eyebrow { font-size: 9pt; color: #0b4f8a; font-weight: bold; letter-spacing: .05em; }
-  h1 { font-size: 16pt; margin: 2px 0 4px; }
-  .meta { font-size: 9pt; color: #52606d; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
-  h2 { font-size: 11.5pt; margin: 12px 0 5px; padding-left: 8px; border-left: 4px solid #0b4f8a; }
-  ul { margin: 0; padding-left: 1.2em; }
+         color: #1f2933; background: #fff; margin: 0; font-size: 9.5pt; line-height: 1.5; }
+  .page { max-width: 190mm; margin: 0 auto; padding: 6mm 0; }
+  header { border-bottom: 3px solid #0b4f8a; padding-bottom: 5px; margin-bottom: 8px; }
+  .eyebrow { font-size: 8.5pt; color: #0b4f8a; font-weight: bold; letter-spacing: .05em; }
+  h1 { font-size: 15pt; margin: 2px 0 3px; }
+  .meta { font-size: 8.5pt; color: #52606d; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+  h2 { font-size: 10.5pt; margin: 10px 0 4px; padding-left: 7px; border-left: 4px solid #0b4f8a; }
+  p { margin: 0 0 4px; }
+  ul, ol { margin: 0; padding-left: 1.3em; }
   li { margin: 1px 0; }
-  .shift { background: #eef4fa; border-radius: 6px; padding: 7px 10px; margin-top: 6px; }
-  .shift b { color: #0b4f8a; }
-  .summary { display: flex; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
-  .summary div { background: #f5f7fa; border-radius: 6px; padding: 4px 10px; font-size: 9.5pt; }
-  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
-  th, td { border: 1px solid #cbd2d9; padding: 5px 7px; vertical-align: top; text-align: left; }
+  .shift { background: #eef4fa; border-radius: 6px; padding: 5px 9px; margin-top: 5px; }
+  .shift b, .key { color: #0b4f8a; }
+  .summary { display: flex; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+  .summary div { background: #f5f7fa; border-radius: 6px; padding: 3px 9px; }
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+  th, td { border: 1px solid #cbd2d9; padding: 4px 6px; vertical-align: top; text-align: left; }
   thead th { background: #0b4f8a; color: #fff; }
-  tbody th { background: #f5f7fa; width: 22%; white-space: nowrap; }
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .ask li { margin: 2px 0; }
-  @media (max-width: 600px) { .page { padding: 16px; } .cols { grid-template-columns: 1fr; } tbody th { white-space: normal; } }
+  tbody th { background: #f5f7fa; white-space: nowrap; }
+  .chain { display: flex; align-items: stretch; gap: 4px; margin: 5px 0 6px; flex-wrap: wrap; }
+  .chain div { flex: 1 1 0; min-width: 90px; background: #eef4fa; border: 1px solid #b6cde3; border-radius: 6px;
+               padding: 4px 6px; font-size: 8.5pt; text-align: center; display: flex; align-items: center; justify-content: center; }
+  .chain div.first { background: #0b4f8a; color: #fff; border-color: #0b4f8a; font-weight: bold; }
+  .chain span { align-self: center; color: #0b4f8a; font-weight: bold; }
+  .cols { display: grid; grid-template-columns: 1.25fr 1fr; gap: 12px; }
+  .note { font-size: 8.5pt; color: #52606d; margin-top: 3px; }
+  .cycle th { width: 7.5em; }
+  @media print { .page { padding: 0; max-width: none; } body { font-size: 9pt; line-height: 1.42; } h2 { margin: 7px 0 3px; } th, td { padding: 3px 6px; } }
+  @media (max-width: 600px) { .page { padding: 16px; } .cols { grid-template-columns: 1fr; } tbody th { white-space: normal; } .chain span { display: none; } }
 </style>
 </head>
 <body>
@@ -39,11 +47,10 @@
 
   <h2>1. 背景：なぜ進め方を変えるのか</h2>
   <ul>
-    <li>Jラインアカデミーでは、選手向け研修と1on1の伴走を実施しています。研修の一環として「競技以外のことを経験する場」を設ける予定です。</li>
     <li><b>当初の計画：</b>選手との対話から「やりたいこと」を引き出し、選手自身が企画・運営するプロセスを弊社が伴走する。</li>
-    <li><b>現状：</b>チーム事情により、選手が一から企画を立ち上げて運営まで進める時間・余力の確保が難しい状況です。</li>
+    <li><b>現状：</b>チーム事情により、選手が一から企画・運営まで進める時間・余力の確保が難しい状況です。</li>
   </ul>
-  <div class="shift">当初のねらい（<b>選手の主体性を育てる／競技外の経験を積む</b>）は変えずに、<b>弊社が「選択肢」を用意し、選手が選んで主体的に取り組む形</b>に切り替えたいと考えています。</div>
+  <div class="shift">ねらい（<b>主体性・考える力を育てる／競技外の経験を積む</b>）は変えずに、<b>弊社が2つの選択肢を用意し、選手が選んで主体的に取り組む形</b>に切り替えます。</div>
 
   <h2>2. ご提案内容</h2>
   <div class="summary">
@@ -51,45 +58,67 @@
     <div>2つのプログラムから<b>選手自身が選択</b></div>
   </div>
   <table>
-    <thead><tr><th></th><th>A. 営業同行</th><th>B. スポGOMI リーダー</th></tr></thead>
+    <thead><tr><th></th><th>A. スポンサー営業への同行</th><th>B. スポGOMI リーダー</th></tr></thead>
     <tbody>
-      <tr><th>概要</th><td>弊社の営業活動に同行し、商談の準備から実際の場までを体験する</td><td>弊社共同代表・佐藤豪が取り組む「スポGOMI（スポーツごみ拾い）」で、選手がチームのリーダーを務める</td></tr>
-      <tr><th>選手の役割</th><td>相手企業の事前調査、商談への同席、振り返り</td><td>チームメンバーのまとめ役、作戦（戦略）立案、当日の指揮</td></tr>
-      <tr><th>一緒に取り組む人</th><td>弊社メンバー、訪問先企業の方</td><td><b>ファン・サポーターの方々</b>（参加者を募集）</td></tr>
-      <tr><th>得られること</th><td>社会・ビジネスの現場感覚、相手の立場で考える力、セカンドキャリアへの視野</td><td>チームマネジメント・戦略立案の経験、ファンとの交流、地域貢献</td></tr>
+      <tr><th>概要</th><td>クラブ社員のスポンサー営業に同行し、準備から商談の場までを体験する</td><td>弊社共同代表・佐藤豪が取り組む「スポGOMI（スポーツごみ拾い）」で、選手がチームのリーダーを務める</td></tr>
+      <tr><th>選手の役割</th><td>訪問先企業の事前調査、商談への同席、スポンサーの方との対話</td><td>メンバーのまとめ役、作戦（戦略）立案、当日の指揮</td></tr>
+      <tr><th>一緒に取り組む人</th><td>クラブの営業担当、スポンサー（候補）企業の方</td><td><b>ファン・サポーターの方々</b>（参加者を募集）</td></tr>
+      <tr><th>得られること</th><td>自分たちのプレーの先にある<b>「期待」</b>を知り、結果を出すことの意味を自分ごとにする（下記3）</td><td><b>チームマネジメント・戦略立案</b>の経験／ファン・地域とのつながり／クラブの地域貢献の発信</td></tr>
     </tbody>
   </table>
 
+  <h2>3. スポンサー営業同行で得られること</h2>
+  <p>選手の仕事はピッチ上で結果を出すこと。それが大前提であり一番の価値です。そのうえで、<b class="key">「その結果の先に、どんな期待がつながっているのか」</b>に思いを巡らせる場にします。</p>
+  <div class="chain">
+    <div class="first">選手のプレー・結果</div><span>→</span>
+    <div>クラブ社員が価値として外に伝える</div><span>→</span>
+    <div>スポンサー・地域が期待し、支える</div><span>→</span>
+    <div>選手・クラブの活動基盤になる</div>
+  </div>
+  <ol>
+    <li><b>支える人の仕事を知る：</b>クラブ社員が日頃どんな仕事をし、見えないところでどう支えているのかを目で見て知る</li>
+    <li><b>クラブの価値を知る：</b>社員がクラブや選手の価値を、どんな言葉で外に伝えているのかを知る</li>
+    <li><b>期待を実感する：</b>スポンサーがなぜクラブを応援し、選手に何を期待しているのかを直接聞いて感じる</li>
+    <li><b>自分ごとにする：</b>「応援されている意味」「結果を出す意味」を考え直し、日々の取り組みへの主体性を高める</li>
+  </ol>
+
+  <h2>4. 「やって終わり」にしない：学びを活かすサイクル</h2>
+  <p>体験そのものより、<b>何に気づき、どう競技・日常に活かすか</b>を重視し、1on1の伴走と組み合わせて学びを定着させます。</p>
+  <table class="cycle">
+    <tbody>
+      <tr><th>① 事前準備</th><td>実施1週間前：「何を知りたいか・何を試したいか」の問いを選手自身が立てる</td></tr>
+      <tr><th>② 体験</th><td>当日：プログラムに参加</td></tr>
+      <tr><th>③ 直後の振り返り</th><td>当日：振り返りシートに「感じたこと・驚いたこと・自分に置き換えると」を記入</td></tr>
+      <tr><th>④ 1on1で深掘り</th><td>1〜2週間以内：気づきを言葉にし、競技・日常で実践する行動を1つ決める</td></tr>
+      <tr><th>⑤ 共有会</th><td>12月の研修内：A・Bの参加者が互いに学びを発表し、違う体験から学び合う</td></tr>
+      <tr><th>⑥ 行動の確認</th><td>以降の1on1：決めた行動を実践できたかを確認し、次の一歩につなげる</td></tr>
+    </tbody>
+  </table>
+  <div class="note">※ Aでは、選手からクラブ営業担当・スポンサーへ「学んだこと」を伝える機会（お礼のメッセージ等）もつくり、社員・スポンサーにとっても価値ある場にします。</div>
+
   <div class="cols">
     <div>
-      <h2>3. クラブにとっての価値</h2>
-      <ul>
-        <li><b>選手の成長：</b>「考える・伝える・人を動かす」経験を積み、競技にも通じる主体性を養う</li>
-        <li><b>ファンとの接点（B）：</b>選手とファンが同じチームで取り組み、応援する関係を超えたつながりが生まれる</li>
-        <li><b>地域への発信：</b>まちをきれいにする活動をクラブ・選手とファンが一緒に行う姿を発信できる</li>
-      </ul>
+      <h2>5. ご相談したいこと</h2>
+      <ol>
+        <li>11月・12月の実施可能な日程（練習・試合との兼ね合い）</li>
+        <li>対象となる選手の範囲・人数</li>
+        <li>スポンサー営業同行について、営業部門へのご相談・同行先の調整</li>
+        <li>スポGOMIのファン・サポーター募集方法（クラブ広報との連携可否）</li>
+        <li>共有会など、振り返りの場を研修内で確保できるか</li>
+      </ol>
     </div>
     <div>
-      <h2>4. 進め方（案）</h2>
+      <h2>6. 進め方（案）</h2>
       <table>
         <tbody>
-          <tr><th>9〜10月</th><td>本提案のご相談・合意、日程すり合わせ</td></tr>
-          <tr><th>10月</th><td>選手への説明、参加プログラムの選択</td></tr>
-          <tr><th>11月</th><td>第1回 実施</td></tr>
-          <tr><th>12月</th><td>第2回 実施</td></tr>
-          <tr><th>各回後</th><td>1on1で振り返り（学び・競技への活かし方）</td></tr>
+          <tr><th>9〜10月</th><td>ご相談・合意、日程と同行先の調整</td></tr>
+          <tr><th>10月</th><td>選手への説明・選択、事前準備</td></tr>
+          <tr><th>11月</th><td>第1回 実施 → 振り返り・1on1</td></tr>
+          <tr><th>12月</th><td>第2回 実施 → 振り返り・1on1、共有会</td></tr>
         </tbody>
       </table>
     </div>
   </div>
-
-  <h2>5. ご相談したいこと</h2>
-  <ol class="ask">
-    <li>11月・12月の実施可能な日程（練習・試合スケジュールとの兼ね合い）</li>
-    <li>対象となる選手の範囲・人数</li>
-    <li>スポGOMIでのファン・サポーター募集方法（クラブ広報との連携可否）</li>
-    <li>その他、クラブとしてご懸念の点</li>
-  </ol>
 </div>
 </body>
 </html>
