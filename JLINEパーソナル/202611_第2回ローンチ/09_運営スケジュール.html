@@ -1,0 +1,779 @@
+<title>第2回ローンチ 運営スケジュール</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: 試合日程表のように、日付を横・やることを縦に並べたガントチャート。上に「いま」、下に選んだ日の予定とタスク表 */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --sunk: #eaeef3;
+  --ink: #14223a;
+  --muted: #586679;
+  --line: #d9e0e8;
+  --grid: #e8ecf1;
+  --accent: #c8102e;
+  --accent-soft: #fbe7ea;
+  --me: #c8102e;
+  --ai: #5a45c6;
+  --a: #1d62c4;
+  --r: #0d7c70;
+  --f: #9e5a00;
+  --n: #5d6e86;
+  --p: #6f7d90;
+  --show: #c8102e;
+  --on-lane: #ffffff;
+  --we-tint: #eef1f6;
+  --show-tint: #fcf0f2;
+  --warn: #a8460a;
+  --ok: #17734a;
+  --font-body: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', system-ui, sans-serif;
+  --font-num: 'Oswald', 'Noto Sans JP', 'Arial Narrow', sans-serif;
+  --labelw: 168px;
+  --colw: 38px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c121b; --surface: #131b27; --sunk: #182231; --ink: #e6ebf2; --muted: #95a3b6;
+    --line: #273347; --grid: #1c2636; --accent: #ff5d6c; --accent-soft: #3a1920;
+    --me: #ff5d6c; --ai: #a796ff; --a: #6ba6ff; --r: #43c9b4; --f: #f0aa38; --n: #93a3ba; --p: #8593a6; --show: #ff5d6c;
+    --on-lane: #0c121b; --we-tint: #161f2c; --show-tint: #24161c; --warn: #f5a35c; --ok: #4cc38a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c121b; --surface: #131b27; --sunk: #182231; --ink: #e6ebf2; --muted: #95a3b6;
+  --line: #273347; --grid: #1c2636; --accent: #ff5d6c; --accent-soft: #3a1920;
+  --me: #ff5d6c; --ai: #a796ff; --a: #6ba6ff; --r: #43c9b4; --f: #f0aa38; --n: #93a3ba; --p: #8593a6; --show: #ff5d6c;
+  --on-lane: #0c121b; --we-tint: #161f2c; --show-tint: #24161c; --warn: #f5a35c; --ok: #4cc38a;
+  color-scheme: dark;
+}
+@media (max-width: 600px) { :root { --labelw: 108px; } }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; line-height: 1.6; }
+.wrap {
+  max-width: 1320px; margin: 0 auto; display: grid; gap: 26px;
+  padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap > * { min-width: 0; }
+a { color: var(--a); word-break: break-all; }
+button { font-family: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.lane-show { --lane: var(--show); } .lane-me { --lane: var(--me); } .lane-ai { --lane: var(--ai); }
+.lane-a { --lane: var(--a); } .lane-r { --lane: var(--r); } .lane-f { --lane: var(--f); }
+.lane-n { --lane: var(--n); } .lane-p { --lane: var(--p); } .lane-ink { --lane: var(--ink); }
+
+/* header */
+.top { display: grid; gap: 6px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--accent); }
+h1 { margin: 0; font-size: clamp(24px, 3.4vw, 34px); font-weight: 900; line-height: 1.25; text-wrap: balance; }
+h1 .range { font-family: var(--font-num); font-weight: 500; letter-spacing: .02em; white-space: nowrap; }
+.lead { margin: 4px 0 0; color: var(--muted); max-width: 46em; }
+
+/* now strip */
+.now { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 2px; min-width: 0; }
+.stat .k { font-size: 11.5px; font-weight: 700; color: var(--muted); letter-spacing: .06em; }
+.stat .v { font-size: 15px; font-weight: 700; line-height: 1.45; }
+.stat .v .num { font-family: var(--font-num); font-weight: 500; font-size: 17px; margin-right: 4px; }
+.stat .s { font-size: 12px; color: var(--muted); }
+.stat.hot { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.stat.hot .k { color: var(--accent); }
+
+/* section heads */
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 20px; margin-bottom: 10px; }
+h2 { margin: 0; font-size: 18px; font-weight: 900; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.lg-bar { width: 26px; height: 12px; border-radius: 4px; background: color-mix(in srgb, var(--n) 18%, var(--surface)); border: 1px solid color-mix(in srgb, var(--n) 60%, transparent); }
+.lg-bar.wait { border-style: dashed; background: var(--surface); }
+.lg-tag { width: 22px; height: 14px; border-radius: 4px; background: var(--a); }
+.lg-tag.draft { background: transparent; box-shadow: inset 0 0 0 1.5px var(--a); }
+.lg-now { width: 2px; height: 14px; background: var(--accent); }
+.lg-show { width: 16px; height: 14px; background: var(--show-tint); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+.hint { margin: 8px 2px 0; font-size: 12px; color: var(--muted); }
+
+/* gantt */
+.gantt-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; -webkit-overflow-scrolling: touch; }
+.gantt { position: relative; width: calc(var(--labelw) + var(--n) * var(--colw)); }
+.g-head { display: grid; grid-template-columns: var(--labelw) repeat(var(--n), var(--colw)); border-bottom: 1px solid var(--line); }
+.g-corner { grid-column: 1; grid-row: 1 / 3; position: sticky; left: 0; z-index: 4; background: var(--surface); border-right: 1px solid var(--line); display: flex; align-items: flex-end; padding: 8px 10px; font-size: 11px; color: var(--muted); }
+.g-month { grid-row: 1; border-left: 1px solid var(--line); padding: 6px 0 2px; font-family: var(--font-num); font-weight: 600; font-size: 13px; letter-spacing: .04em; }
+.g-month span { position: sticky; left: calc(var(--labelw) + 8px); padding-left: 8px; }
+.g-day { grid-row: 2; border: 0; border-left: 1px solid var(--grid); background: transparent; padding: 3px 0 6px; display: flex; flex-direction: column; align-items: center; gap: 1px; cursor: pointer; min-height: 58px; }
+.g-day .dn { font-family: var(--font-num); font-weight: 500; font-size: 16px; line-height: 1.2; }
+.g-day .dw { font-size: 10.5px; color: var(--muted); line-height: 1.2; }
+.g-day .fl { font-size: 9.5px; font-weight: 700; line-height: 1; padding: 3px 4px; border-radius: 4px; margin-top: 2px; }
+.g-day.we { background: var(--we-tint); }
+.g-day.sat .dw { color: var(--a); }
+.g-day.sun .dw, .g-day.hol .dw { color: var(--accent); }
+.g-day.show { background: var(--show-tint); }
+.g-day.show .fl { background: var(--accent); color: var(--on-lane); }
+.g-day.today .dn { color: var(--accent); }
+.g-day.today .fl.t { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.g-day.sel { box-shadow: inset 0 -3px 0 var(--ink); }
+.g-day:hover { background: var(--sunk); }
+
+.g-body { position: relative; }
+.g-cols { position: absolute; inset: 0 auto 0 var(--labelw); width: calc(var(--n) * var(--colw)); display: grid; grid-template-columns: repeat(var(--n), var(--colw)); pointer-events: none; z-index: 0; }
+.g-col { border-left: 1px solid var(--grid); }
+.g-col.we { background: var(--we-tint); }
+.g-col.show { background: var(--show-tint); }
+.g-col.sel { box-shadow: inset 2px 0 0 color-mix(in srgb, var(--ink) 35%, transparent), inset -2px 0 0 color-mix(in srgb, var(--ink) 35%, transparent); }
+.now-line { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--accent); z-index: 2; pointer-events: none; }
+.now-line::before { content: ""; position: absolute; top: -4px; left: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+.g-row { position: relative; z-index: 1; display: grid; grid-template-columns: var(--labelw) calc(var(--n) * var(--colw)); border-top: 1px solid var(--grid); }
+.g-label { position: sticky; left: 0; z-index: 3; background: var(--surface); border-right: 1px solid var(--line); padding: 7px 10px; display: flex; flex-direction: column; justify-content: center; font-size: 12.5px; font-weight: 500; line-height: 1.35; min-width: 0; }
+.g-label .sub { font-size: 10.5px; color: var(--muted); font-weight: 400; }
+.g-track { display: grid; grid-template-columns: repeat(var(--n), var(--colw)); align-items: center; padding-block: 6px; min-height: 38px; }
+.g-group { border-top: 1px solid var(--line); }
+.g-group .g-label { background: var(--sunk); flex-direction: row; align-items: center; gap: 8px; font-size: 12px; font-weight: 900; color: var(--lane); letter-spacing: .04em; padding-block: 6px; }
+.g-group .g-label i { width: 8px; height: 8px; border-radius: 2px; background: var(--lane); flex: none; }
+.g-group .g-track { background: color-mix(in srgb, var(--sunk) 70%, transparent); min-height: 30px; padding: 0; }
+.g-row:first-child { border-top: 0; }
+
+.bar { grid-row: 1; position: relative; height: 26px; margin-inline: 2px; min-width: 0; border-radius: 6px; padding: 0 8px; text-align: left; cursor: pointer; display: flex; align-items: center;
+  background: var(--sunk); background: color-mix(in srgb, var(--lane) 16%, var(--surface));
+  border: 1px solid var(--lane); border-color: color-mix(in srgb, var(--lane) 55%, transparent);
+  font-size: 11.5px; font-weight: 700; color: var(--ink); }
+.bar > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; position: relative; z-index: 1; }
+.bar.wait { border-style: dashed; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--lane) 11%, var(--surface)) 0 6px, var(--surface) 6px 12px); }
+.bar.light { background: var(--surface); background: color-mix(in srgb, var(--lane) 7%, var(--surface)); font-weight: 500; }
+.bar.done > span::before, .bar.checked > span::before { content: "✓ "; color: var(--ok); }
+.bar.checked { opacity: .55; }
+.bar:hover { border-color: var(--lane); }
+.pin { position: absolute; top: 50%; width: 9px; height: 9px; background: var(--lane); border: 1.5px solid var(--surface); transform: translate(-50%, -50%) rotate(45deg); z-index: 2; }
+
+.stack { grid-row: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.tag { width: calc(var(--colw) - 6px); border: 0; border-radius: 5px; padding: 4px 0 3px; cursor: pointer; text-align: center; white-space: nowrap; overflow: hidden;
+  background: var(--lane); color: var(--on-lane); font-family: var(--font-num); font-weight: 600; font-size: 10.5px; line-height: 1.15; letter-spacing: .02em; }
+.tag.jp { font-family: var(--font-body); font-weight: 700; font-size: 9.5px; letter-spacing: 0; }
+.tag.draft { background: transparent; color: var(--lane); box-shadow: inset 0 0 0 1.5px var(--lane); }
+.tag.past { opacity: .4; }
+.tag.checked { opacity: .45; }
+
+/* lower */
+.lower { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 900px) { .lower { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px 10px; min-width: 0; }
+.tasks { display: grid; gap: 22px; min-width: 0; }
+
+.day-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.day-head h2 { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
+.day-head .dd { font-family: var(--font-num); font-weight: 500; font-size: 26px; letter-spacing: .01em; }
+.badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: var(--on-lane); }
+.badge.soft { background: var(--accent-soft); color: var(--accent); }
+.nav { display: flex; gap: 6px; flex: none; }
+.nav button { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-size: 15px; }
+.nav button:hover { background: var(--sunk); }
+.nav button:disabled { opacity: .35; cursor: default; }
+
+.evs { list-style: none; margin: 10px 0 0; padding: 0; }
+.ev { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 2px 12px; padding: 10px 6px; border-top: 1px solid var(--grid); border-radius: 6px; }
+.ev.hl { background: var(--sunk); background: color-mix(in srgb, var(--lane) 10%, var(--surface)); }
+.ev.past { opacity: .55; }
+.ev-time { font-family: var(--font-num); font-weight: 500; font-size: 15px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.ev-time.all { font-family: var(--font-body); font-size: 11px; font-weight: 700; color: var(--muted); padding-top: 3px; }
+.ev-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 11.5px; font-weight: 700; color: var(--lane); }
+.ev-meta .dot { width: 8px; height: 8px; border-radius: 2px; background: var(--lane); }
+.ev-title { font-weight: 700; line-height: 1.5; }
+.ev-title .code { font-family: var(--font-num); font-weight: 600; margin-right: 6px; color: var(--lane); }
+.ev-note { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.65; }
+.empty { color: var(--muted); padding: 12px 0; margin: 0; }
+
+.st { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; line-height: 1.5; background: var(--sunk); color: var(--muted); }
+.st.now { background: var(--accent-soft); color: var(--accent); }
+.st.late { background: var(--sunk); background: color-mix(in srgb, var(--warn) 14%, var(--surface)); color: var(--warn); }
+.st.ok { background: var(--sunk); background: color-mix(in srgb, var(--ok) 14%, var(--surface)); color: var(--ok); }
+.st.wait { background: var(--sunk); background: color-mix(in srgb, var(--ai) 13%, var(--surface)); color: var(--ai); }
+
+.tlist { list-style: none; margin: 10px 0 0; padding: 0; }
+.task { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 2px 10px; align-items: start; padding: 11px 0; border-top: 1px solid var(--grid); }
+.task input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
+.task .mark { width: 10px; height: 10px; border-radius: 3px; margin: 6px 0 0 4px; background: var(--ai); }
+.task label, .task .tt { display: grid; gap: 1px; min-width: 0; cursor: pointer; }
+.task .tt { cursor: default; }
+.t-title { font-weight: 700; line-height: 1.5; }
+.t-due { font-size: 12px; color: var(--muted); }
+.t-note { grid-column: 2 / -1; margin: 3px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.65; }
+.task.checked .t-title { text-decoration: line-through; color: var(--muted); }
+.panel .note { font-size: 12.5px; color: var(--muted); margin: 10px 0 6px; line-height: 1.7; }
+.panel h2 small { font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 8px; }
+
+footer { font-size: 12px; color: var(--muted); line-height: 1.8; border-top: 1px solid var(--line); padding-top: 14px; }
+footer code { font-size: 11.5px; background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">JLINEパーソナル　第2回ローンチ　サッカーIQ爆上げセミナー</div>
+    <h1>運営スケジュール <span class="range">10/26 → 11/23</span></h1>
+    <p class="lead">公式LINEの配信、鈴木さんの作業、Claudeの作業をひとつの表にしました。配信はすべてUTAGEに予約済みです（A14だけ、1回目の感想しだいで送ります）。</p>
+  </header>
+
+  <section class="now" id="now" aria-label="いまの状況"></section>
+
+  <section>
+    <div class="sec-head">
+      <h2>ガントチャート</h2>
+      <div class="legend" aria-label="凡例">
+        <span><i class="lg-bar"></i>作業・期間</span>
+        <span><i class="lg-bar wait"></i>待ち・未作成</span>
+        <span><i class="lg-tag"></i>配信1通</span>
+        <span><i class="lg-tag draft"></i>下書き</span>
+        <span><i class="lg-show"></i>本番の日</span>
+        <span><i class="lg-now"></i>いま</span>
+      </div>
+    </div>
+    <div class="gantt-scroll" id="gscroll"><div class="gantt" id="gantt"></div></div>
+    <p class="hint">日付やマークを押すと、その日の予定が下に出ます。表は横にスクロールできます。</p>
+  </section>
+
+  <div class="lower">
+    <section class="panel" id="day" aria-live="polite"></section>
+    <div class="tasks">
+      <section class="panel" id="me-list"></section>
+      <section class="panel" id="ai-list"></section>
+    </div>
+  </div>
+
+  <footer>
+    配信の文面は <code>02_LINE配信文面.md</code>、UTAGEのIDと設定は <code>07_UTAGE構築ログ.md</code> にあります（リポジトリの <code>JLINEパーソナル/202611_第2回ローンチ/</code>）。予定が変わったら、Claudeがこの表も直します。チェックは、この端末のブラウザにだけ残ります。<br>
+    最終更新：10/26（月）
+  </footer>
+</div>
+
+<script>
+(function () {
+  var START = Date.UTC(2026, 9, 26), N = 29, DAY = 864e5;
+  var WD = '日月火水木金土';
+  var HOL = { '11/3': 1, '11/23': 1 };
+  var SHOW = { '11/8': '1回目', '11/13': '2回目', '11/15': '最終回' };
+  var LANE_NAME = { show: 'セミナー本番', me: '鈴木さん', ai: 'Claude', a: '一斉配信', r: '申込者リマインド', f: '開催後フォロー', n: '新しく登録した方', p: '期間の設定' };
+  var STATUS = { todo: ['未着手', ''], wait: ['待ち', 'wait'], set: ['予約済み', 'ok'], done: ['済み', 'ok'] };
+
+  function ix(md) { var p = md.split('/'); return Math.round((Date.UTC(2026, +p[0] - 1, +p[1]) - START) / DAY); }
+  function dt(i) { return new Date(START + i * DAY); }
+  function mdOf(i) { var t = dt(i); return (t.getUTCMonth() + 1) + '/' + t.getUTCDate(); }
+  function wdOf(i) { return dt(i).getUTCDay(); }
+  function dayLabel(i) { var m = mdOf(i); return m + '（' + WD[wdOf(i)] + (HOL[m] ? '祝' : '') + '）'; }
+  function toMin(i, t) { if (!t) return i * 1440; var p = t.split(':'); return i * 1440 + (+p[0]) * 60 + (+p[1]); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function linkify(s) { return esc(s).replace(/https:\/\/[A-Za-z0-9.\/_\-?=&#%]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener">' + u + '</a>'; }); }
+  function h(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+
+  // いま（日本時間）
+  var J = new Date(Date.now() + 9 * 36e5);
+  var todayAbs = Math.floor((Date.UTC(J.getUTCFullYear(), J.getUTCMonth(), J.getUTCDate()) - START) / DAY);
+  var nowMin = todayAbs * 1440 + J.getUTCHours() * 60 + J.getUTCMinutes();
+  var inRange = todayAbs >= 0 && todayAbs < N;
+  var todayIdx = Math.min(Math.max(todayAbs, 0), N - 1);
+
+  var seq = 0;
+  function bar(s, e, title, note, o) { o = o || {}; return Object.assign({ k: 'bar', s: s, e: e, title: title, note: note, id: 'b' + (seq++) }, o); }
+  function mk(d, t, code, title, note, o) { o = o || {}; return Object.assign({ k: 'mark', d: d, t: t, code: code, title: title, note: note, id: 'm' + (seq++) }, o); }
+  function marks(rows, extra) { return rows.map(function (r) { return mk(r[0], r[1], r[2], r[3], r[4], Object.assign({}, extra || {}, r[5] || {})); }); }
+
+  var SHOW_NOTE = '18:00 Zoom・スライド・動画の音の最終確認 → 19:20 Zoomを開ける（入ってきた方に一言ずつ）→ 19:30 開始 → 20:45 終了。QRをもう一度出して、チャットにアンケートの案内を貼る。申込は当日20:00まで受け付けています';
+
+  var A = [
+    ['10/26', '19:00', 'A1', '予告①＋日程アンケート', '友だち全員へ（受講生・モニター・相談済み・前回着席の方は除く）。日程ボタンを押した方に「先行案内希望」ラベルが付きます'],
+    ['10/28', '20:00', 'A2', '予告②テーマ発表', '［先行案内を受け取る］ボタン付き'],
+    ['10/29', '19:00', 'S1', '前回の申込者へ', '前回（8/30・9/3）に申し込んだ方だけ。「参加された方は同じ内容なので不要、欠席だった方はぜひ」'],
+    ['10/30', '12:00', 'A3a', '先行案内', '「先行案内希望」の方だけ。ここで申込URLを初めて出します'],
+    ['10/30', '19:00', 'A3', '募集開始', '全員へ。申込の受付が始まります'],
+    ['10/31', '21:00', 'A4', '教育①「結局、才能と運でしょ？」', 'YouTube「才能？運？」の動画付き。ここから先は、申し込んだ方には届きません'],
+    ['11/1', '21:00', 'A5', '教育②首は振っているのに奪われる', 'YouTube「首を振れ」の動画付き'],
+    ['11/2', '19:00', 'A5b', '新学年まで、あと5ヶ月', ''],
+    ['11/3', '21:00', 'A6', '教育③サッカーを辞めても残る力', ''],
+    ['11/4', '19:00', 'A7', '来てほしい家庭／来なくていい家庭', ''],
+    ['11/5', '19:00', 'A8', '参加者限定特典', ''],
+    ['11/6', '19:00', 'A9', 'よくある質問', ''],
+    ['11/7', '21:00', 'A10', '明日1回目', '申込数は16:00にClaudeが入れます'],
+    ['11/8', '9:00', 'A11', '本日19:30（1回目）', ''],
+    ['11/8', '18:30', 'A12', 'あと1時間（1回目）', ''],
+    ['11/8', '21:15', 'A13', '1回目終了 → 残り2回', ''],
+    ['11/10', '19:00', 'A14', '1回目に参加された方の声', 'いまは下書き。11/9に紹介できる感想が集まれば仕上げて予約し、集まらなければ送りません', { draft: true }],
+    ['11/11', '19:00', 'A15', '受講生に起きている変化', ''],
+    ['11/12', '19:00', 'A16', '明日2回目', '申込数と感想は、11/9と11/12にClaudeが入れます'],
+    ['11/13', '12:00', 'A17', '本日19:30（2回目）', '感想は11/9にClaudeが入れます'],
+    ['11/13', '18:30', 'A18', 'あと1時間（2回目）', ''],
+    ['11/13', '21:15', 'A19', '2回目終了 → 最後は11/15', ''],
+    ['11/14', '21:00', 'A20', '明日が最後', ''],
+    ['11/15', '9:00', 'A21', '本日19:30 最終回', ''],
+    ['11/15', '18:30', 'A22', 'あと1時間・最終回', '']
+  ];
+  var R = [
+    ['11/5', '19:00', 'R3', '当日の見方を先に（11/8回）', 'メール（LINEを見ていない方向け）は同じ日の8:00'],
+    ['11/7', '20:00', 'R4', 'いよいよ明日（11/8回）', '鈴木さんの動画付き（届けば）。メールは同じ日の8:00'],
+    ['11/8', '8:00', 'R5', '当日の朝（11/8回）', 'メールも8:00'],
+    ['11/8', '18:30', 'R6', 'あと60分＋Zoomの入り方', 'Zoomの入り方の画像付き。URLを押すと「着席」ラベル。メールも18:30'],
+    ['11/8', '19:20', 'R7', 'あと10分', 'URLを押すと「着席」ラベル'],
+    ['11/8', '19:45', 'R9', '開始15分後', 'まだ入っていない方へ'],
+    ['11/10', '19:00', 'R3', '当日の見方を先に（11/13回）', 'メールは同じ日の8:00'],
+    ['11/12', '19:00', 'R3', '当日の見方を先に（11/15回）', 'メールは同じ日の8:00'],
+    ['11/12', '20:00', 'R4', 'いよいよ明日（11/13回）', 'メールは同じ日の8:00'],
+    ['11/13', '7:30', 'R5', '当日の朝（11/13回）', 'メールは8:00'],
+    ['11/13', '18:30', 'R6', 'あと60分＋Zoomの入り方', ''],
+    ['11/13', '19:20', 'R7', 'あと10分', ''],
+    ['11/13', '19:45', 'R9', '開始15分後', ''],
+    ['11/14', '20:00', 'R4', 'いよいよ明日（11/15回）', 'メールは同じ日の8:00'],
+    ['11/15', '8:00', 'R5', '当日の朝（11/15回）', ''],
+    ['11/15', '18:30', 'R6', 'あと60分＋Zoomの入り方', ''],
+    ['11/15', '19:20', 'R7', 'あと10分', ''],
+    ['11/15', '19:45', 'R9', '開始15分後', '']
+  ];
+  var F = [
+    ['11/8', '20:45', 'F0', '1分アンケートのご案内', 'その回の申込者全員へ。URLを押すと「着席」ラベル'],
+    ['11/8', '21:15', 'F1', 'ワンプレー相談のご案内', '着席して、まだ相談を予約していない方'],
+    ['11/9', '12:00', 'F2', '「3秒前から見る」＋相談', '1回目に着席・相談未予約の方'],
+    ['11/9', '12:00', 'F4', '振替のご案内', '11/8回を欠席した方'],
+    ['11/9', '18:00', 'F3', '相談のよくある質問', '1回目に着席・相談未予約の方'],
+    ['11/11', '20:00', 'F7', '相談受付の途中案内', '11/8回に着席・相談未予約の方'],
+    ['11/12', '19:00', 'F5', '再案内「明日11/13です」', '11/8回を欠席した方'],
+    ['11/13', '20:45', 'F0', '1分アンケートのご案内', 'その回の申込者全員へ'],
+    ['11/13', '21:15', 'F1', 'ワンプレー相談のご案内', '着席・相談未予約の方'],
+    ['11/14', '9:00', 'F4', '振替のご案内', '11/13回を欠席した方'],
+    ['11/14', '12:00', 'F2', '「3秒前から見る」＋相談', '2回目に着席・相談未予約の方'],
+    ['11/14', '18:00', 'F3', '相談のよくある質問', '2回目に着席・相談未予約の方'],
+    ['11/15', '9:00', 'F5', '再案内「本日が最終回です」', '11/8回・11/13回を欠席した方'],
+    ['11/15', '20:45', 'F0', '1分アンケートのご案内', 'その回の申込者全員へ'],
+    ['11/15', '21:15', 'F1', 'ワンプレー相談のご案内', '着席・相談未予約の方'],
+    ['11/16', '12:00', 'F2', '「3秒前から見る」＋相談', '最終回に着席・相談未予約の方'],
+    ['11/16', '12:00', 'F6', '最終回を欠席した方へ', '11/15回を欠席した方'],
+    ['11/16', '18:00', 'F3', '相談のよくある質問', '最終回に着席・相談未予約の方'],
+    ['11/18', '20:00', 'F7', '相談受付の途中案内', '全回の着席・相談未予約の方'],
+    ['11/21', '20:00', 'F8', '相談受付ラスト', '着席・相談未予約の方（受付は11/22まで）']
+  ];
+
+  var GROUPS = [
+    { lane: 'show', name: 'セミナー本番', rows: [
+      { label: 'サッカーIQ爆上げセミナー', sub: '19:30〜20:45・Zoom', items: [
+        mk('11/8', '19:30', '1回目', 'セミナー1回目', SHOW_NOTE, { id: 'show1', jp: true }),
+        mk('11/13', '19:30', '2回目', 'セミナー2回目', SHOW_NOTE, { id: 'show2', jp: true }),
+        mk('11/15', '19:30', '最終回', 'セミナー最終回', SHOW_NOTE + '。終わったら「前の回と何が違ったか」を1行メモ', { id: 'show3', jp: true })
+      ] }
+    ] },
+    { lane: 'me', name: '鈴木さんのやること', rows: [
+      { label: 'リッチメニューを作る', sub: '10/30の切り替えに使う', items: [
+        bar('10/26', '10/29', '期間用のリッチメニューを作る', '管理画面で「JLINEパーソナル」を複製し、名前を「JLINEパーソナル_11月セミナー期間」に。画像を「リッチメニュー_セミナー期間.jpg」に差し替え、左のボタンのリンクを申込ページ（https://utage-system.com/p/bcg5YMN2QsIj）に変えて、デフォルトにはせずに保存。できたらClaudeに「作った」と送ってください', { short: 'リッチメニュー作成', id: 'me-menu' })
+      ] },
+      { label: '新しい価格に差し替える', sub: '旧価格は10/31まで', items: [
+        bar('10/26', '10/31', '提案資料などを新しい価格に差し替える', '提案資料（プランとオプションのページ）、Chatworkと入金後メッセージのテンプレート、スプレッドシート「パーソナルプラン」、追補v1.0の価格トークを、06の内容（150,000円・6ヶ月）に。UTAGEの決済商品と特商法の表記はClaudeがやります', { short: '提案資料・テンプレート', id: 'me-price' })
+      ] },
+      { label: 'スライドを仕上げる', sub: 'PDFは11/7まで', items: [
+        bar('10/26', '11/7', 'スライドを仕上げてPDFを送る', '台本v3の差し替え（01・05・06・14・66・73・75〜80枚目）。77枚目の相談日程を「11/22（日）まで」に、78枚目のQRを相談の予約ページに、冒頭に「最後まで参加された方への特典」を1枚。できたらPDFをClaudeに送ってください（参加者特典として配ります）', { short: 'スライド差し替え → PDF', id: 'me-slide', pins: [{ d: '10/27', title: '台本の01・06・80枚目に企画名を入れる', id: 'me-name' }] })
+      ] },
+      { label: 'R4の動画を撮る', sub: '台本は08', items: [
+        bar('10/26', '11/6', 'R4「いよいよ明日」の動画を撮って送る', '台本は 08_R4前日動画_台本.md。11/6までに届けば、Claudeが編集して11/7 20:00のR4（1回目の前日）から付けます', { short: 'R4の動画', id: 'me-r4' })
+      ] },
+      { label: 'リハーサル', items: [
+        mk('11/7', '', 'リハ', 'リハーサル', 'Zoomの画面共有・動画の音・QRの読み取りを確認', { id: 'me-reh', jp: true })
+      ] },
+      { label: '1回目の振り返りを反映', items: [
+        bar('11/9', '11/12', '1回目の振り返りをスライドに反映', '時間配分や、伝わりにくかった所を直してから2回目へ。アンケートに来た質問は、11/9にClaudeが一覧にして送ります（LINEで答える用）', { short: '振り返り → 修正', id: 'me-fix' })
+      ] },
+      { label: 'ワンプレー相談', sub: '1回60分', items: [
+        bar('11/9', '11/22', 'ワンプレー相談を行う', '予約が入った分を行う（1回60分）。相談の前日は、鈴木さんから1対1で一言送ってください', { short: '相談（予約が入った分）', id: 'me-consult', ongoing: true })
+      ] },
+      { label: 'LINEの個別返信', items: [
+        bar('10/26', '11/22', 'LINEの個別返信に答える', '「参加します」「振替」「10秒プレー」「相談希望」などの返信に答える。10秒プレーは、当日見てよいか本人に了承を取る。振替はUTAGEで日程を変えます（Claudeに言ってもらえれば変えます）。11/8回→11/13回は11/12 19:00まで、11/13回→11/15回は11/15 9:00までに', { short: '返信への対応（期間中ずっと）', id: 'me-reply', ongoing: true, light: true })
+      ] }
+    ] },
+    { lane: 'ai', name: 'Claudeのやること', rows: [
+      { label: '決済商品・特商法', sub: '新しい価格に', items: [
+        bar('10/26', '10/31', '決済商品と特商法の表記を新しい価格に', 'UTAGEに決済商品（150,000円・6回分割）を作り、申込ページと特定商取引法の表記を新しい価格にする', { short: '決済商品・特商法', status: 'todo', id: 'ai-pay' })
+      ] },
+      { label: 'リッチメニューの切り替え', sub: '鈴木さんのメニュー待ち', items: [
+        bar('10/27', '10/30', 'リッチメニューの切り替えを自動にする', '鈴木さんのメニューができたら設定。10/30 12:00に全員（受講生・モニターを除く）を期間用メニューへ。期間中に登録した方も期間用へ。セミナーに参加した方は、相談ボタンのある元のメニューへ', { short: '切り替えの設定', status: 'wait', id: 'ai-menu', pins: [{ d: '10/30', t: '12:00', title: '全員を期間用のリッチメニューへ切り替え', id: 'ai-menu-sw' }] })
+      ] },
+      { label: 'R4に動画を付ける', sub: '動画が届いたら', items: [
+        bar('11/6', '11/7', 'R4に鈴木さんの動画を付ける', '動画が届いたら編集して、R4（11/7・11/12・11/14の20:00）に付ける', { short: '動画の編集', status: 'wait', id: 'ai-r4' })
+      ] },
+      { label: 'スライドPDFを特典に', sub: 'PDFが届いたら', items: [
+        bar('11/7', '11/8', 'スライドのPDFを参加者特典に入れる', 'アンケートに答えた方へのお礼LINEに、スライドのPDFを入れる（11/8 20:45のF0まで）', { short: 'PDFを特典に', status: 'wait', id: 'ai-pdf' })
+      ] },
+      { label: '見に来る予約', sub: '予約済み・自動で動きます', items: marks([
+        ['11/7', '16:00', '確認①', '申込数をA10に入れる', '申込数を数えて、21:00のA10に入れる（少なすぎれば入れない）。結果を鈴木さんに一言', { id: 'ai-c1' }],
+        ['11/9', '10:00', '確認②', '1回目の感想でA14を仕上げる', 'アンケートから感想を集め、A14（11/10）を仕上げて予約。A16・A17にも感想を入れる。アンケートに来た質問を鈴木さんへ', { id: 'ai-c2' }],
+        ['11/12', '14:00', '確認③', '申込数をA16に入れる', '11/13・11/15の申込数を、19:00のA16に入れる', { id: 'ai-c3' }],
+        ['11/23', '9:00', '確認④', '期間の設定を元に戻す', '相談カレンダーとリッチメニューを元に戻す', { id: 'ai-c4' }]
+      ], { status: 'set', jp: true }) }
+    ] },
+    { lane: 'ink', name: '自動で届く配信（UTAGEに予約済み）', rows: [
+      { lane: 'a', label: '一斉配信', sub: 'まだ申し込んでいない方', items: marks(A) },
+      { lane: 'r', label: '申込直後・翌日', sub: 'R1・R2', items: [
+        bar('10/30', '11/15', 'R1・R2（申し込んだ方へ、そのつど）', 'R1：申込の直後（Zoomの参加URL）。R2：申込の翌日19:00（予習動画。開催の2日前までに申し込んだ方）', { short: 'R1 申込直後／R2 翌日19:00' })
+      ] },
+      { lane: 'r', label: '申込者リマインド', sub: 'R3〜R9（参加する回に合わせて）', items: marks(R) },
+      { lane: 'f', label: '開催後フォロー', sub: 'F0〜F8', items: marks(F) },
+      { lane: 'n', label: '新しく登録した方', sub: 'N1（登録60分後）', items: [
+        bar('10/26', '10/29', 'N1 予告版', '10/26〜10/29に登録した方へ、登録60分後。「10/30から受付です」', { short: 'N1 予告版' }),
+        bar('10/30', '11/7', 'N1 3日程版', '10/30〜11/7に登録した方へ（登録60分後）', { short: 'N1 3日程版' }),
+        bar('11/8', '11/12', 'N1 残り2回版', '11/8 19:00〜11/12に登録した方へ（登録60分後）', { short: 'N1 残り2回版' }),
+        bar('11/13', '11/14', 'N1 最終回版', '11/13 19:00〜11/14に登録した方へ（登録60分後）', { short: 'N1 最終回' })
+      ] },
+      { lane: 'n', label: '当日に登録した方', sub: 'N2（登録20分後）', items: marks([
+        ['11/8', '', 'N2', '当日に登録した方へ', '11/8の0:00〜19:00に登録した方へ、登録20分後に今夜のご案内'],
+        ['11/13', '', 'N2', '当日に登録した方へ', '11/13の0:00〜19:00に登録した方へ、登録20分後に今夜のご案内'],
+        ['11/15', '', 'N2', '当日に登録した方へ', '11/15の0:00〜19:00に登録した方へ、登録20分後に今夜のご案内']
+      ], { tt: '随時' }) }
+    ] },
+    { lane: 'p', name: '期間の設定', rows: [
+      { label: 'セミナーの申込受付', items: [
+        bar('10/30', '11/15', 'セミナーの申込受付', '10/30 12:00の先行案内から。各回とも当日20:00まで申し込めます', { short: '申込受付（各回20:00まで）' })
+      ] },
+      { label: 'ワンプレー相談の受付', items: [
+        bar('11/8', '11/22', 'ワンプレー相談の受付', '参加した翌日から11/22（日）まで予約できます', { short: '相談の受付（〜11/22）' })
+      ] },
+      { label: '相談カレンダー', sub: '設定済み', items: [
+        bar('10/26', '11/22', '相談カレンダーの期間設定', '11/22までの表示に固定。11/8・11/15は受付なし、11/13は10:00〜19:00だけ。11/23にClaudeが元に戻します', { short: '11/22まで・本番の夜はふさぐ', status: 'done' })
+      ] },
+      { label: '期間用リッチメニュー', sub: '作成待ち', items: [
+        bar('10/30', '11/22', '期間用のリッチメニュー', '左のボタンが「無料セミナー 申し込む」になったメニュー。10/30 12:00から全員に。11/23に元に戻します', { short: '期間用メニュー', status: 'wait' })
+      ] }
+    ] }
+  ];
+
+  // 鈴木さんのチェック（この端末だけ）
+  var KEY = 'jline2-schedule-done';
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { done = {}; }
+  function saveDone() { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} }
+
+  var state = { sel: todayIdx, hl: null };
+  var gantt = document.getElementById('gantt');
+  var gscroll = document.getElementById('gscroll');
+  gantt.style.setProperty('--n', N);
+
+  function isPast(it) {
+    if (it.k === 'bar') return ix(it.e) < todayAbs;
+    return toMin(ix(it.d), it.t || '23:59') < nowMin;
+  }
+
+  function renderGantt() {
+    gantt.innerHTML = '';
+    var head = h('div', 'g-head');
+    head.appendChild(h('div', 'g-corner', '<span>日付</span>'));
+    var i = 0;
+    while (i < N) {
+      var m = dt(i).getUTCMonth(), j = i;
+      while (j < N && dt(j).getUTCMonth() === m) j++;
+      var mc = h('div', 'g-month', '<span>' + (m + 1) + '月</span>');
+      mc.style.gridColumn = (i + 2) + ' / ' + (j + 2);
+      head.appendChild(mc);
+      i = j;
+    }
+    for (var d = 0; d < N; d++) {
+      var md = mdOf(d), w = wdOf(d);
+      var b = h('button', 'g-day');
+      b.type = 'button';
+      b.dataset.day = d;
+      if (w === 6) b.classList.add('we', 'sat');
+      if (w === 0) b.classList.add('we', 'sun');
+      if (HOL[md]) b.classList.add('we', 'hol');
+      if (SHOW[md]) b.classList.add('show');
+      if (inRange && d === todayAbs) b.classList.add('today');
+      if (d === state.sel) b.classList.add('sel');
+      var fl = SHOW[md] ? '<span class="fl">本番</span>' : (inRange && d === todayAbs ? '<span class="fl t">今日</span>' : '');
+      b.innerHTML = '<span class="dn">' + dt(d).getUTCDate() + '</span><span class="dw">' + WD[w] + (HOL[md] ? '祝' : '') + '</span>' + fl;
+      b.setAttribute('aria-label', dayLabel(d) + (SHOW[md] ? ' セミナー' + SHOW[md] : '') + 'の予定を見る');
+      b.style.gridColumn = d + 2;
+      head.appendChild(b);
+    }
+    gantt.appendChild(head);
+
+    var body = h('div', 'g-body');
+    var cols = h('div', 'g-cols');
+    for (var c = 0; c < N; c++) {
+      var col = h('div', 'g-col'), cm = mdOf(c), cw = wdOf(c);
+      if (cw === 0 || cw === 6 || HOL[cm]) col.classList.add('we');
+      if (SHOW[cm]) col.classList.add('show');
+      if (c === state.sel) col.classList.add('sel');
+      cols.appendChild(col);
+    }
+    if (inRange) {
+      var line = h('div', 'now-line');
+      line.style.left = 'calc(var(--colw) * ' + (todayAbs + (nowMin - todayAbs * 1440) / 1440).toFixed(4) + ')';
+      cols.appendChild(line);
+    }
+    body.appendChild(cols);
+
+    GROUPS.forEach(function (g) {
+      var gr = h('div', 'g-row g-group lane-' + g.lane);
+      gr.appendChild(h('div', 'g-label', '<i></i>' + esc(g.name)));
+      gr.appendChild(h('div', 'g-track'));
+      body.appendChild(gr);
+      g.rows.forEach(function (r) {
+        var lane = r.lane || g.lane;
+        var row = h('div', 'g-row lane-' + lane);
+        row.appendChild(h('div', 'g-label', esc(r.label) + (r.sub ? '<span class="sub">' + esc(r.sub) + '</span>' : '')));
+        var track = h('div', 'g-track');
+        var stacks = {};
+        r.items.forEach(function (it) {
+          if (it.k === 'bar') {
+            var s = ix(it.s), e = ix(it.e);
+            var el = h('button', 'bar');
+            el.type = 'button';
+            if (it.status === 'wait') el.classList.add('wait');
+            if (it.status === 'done') el.classList.add('done');
+            if (it.light) el.classList.add('light');
+            if (done[it.id]) el.classList.add('checked');
+            el.dataset.s = s; el.dataset.e = e; el.dataset.id = it.id;
+            el.style.gridColumn = (s + 1) + ' / ' + (e + 2);
+            el.title = it.title + '（' + dayLabel(s) + '〜' + dayLabel(e) + '）';
+            el.innerHTML = '<span>' + esc(it.short || it.title) + '</span>';
+            (it.pins || []).forEach(function (p) {
+              var pin = h('i', 'pin');
+              pin.style.left = 'calc(100% * ' + ((ix(p.d) - s + 0.5) / (e - s + 1)).toFixed(4) + ')';
+              pin.title = p.title;
+              el.appendChild(pin);
+            });
+            track.appendChild(el);
+          } else {
+            var di = ix(it.d);
+            if (!stacks[di]) {
+              stacks[di] = h('div', 'stack');
+              stacks[di].style.gridColumn = di + 1;
+              track.appendChild(stacks[di]);
+            }
+            var tg = h('button', 'tag');
+            tg.type = 'button';
+            if (it.jp) tg.classList.add('jp');
+            if (it.draft) tg.classList.add('draft');
+            if (isPast(it)) tg.classList.add('past');
+            if (done[it.id]) tg.classList.add('checked');
+            tg.dataset.day = di; tg.dataset.id = it.id;
+            tg.textContent = it.code;
+            tg.title = dayLabel(di) + ' ' + (it.t || it.tt || '') + ' ' + it.code + ' ' + it.title;
+            stacks[di].appendChild(tg);
+          }
+        });
+        row.appendChild(track);
+        body.appendChild(row);
+      });
+    });
+    gantt.appendChild(body);
+  }
+
+  function dayItems(i) {
+    var out = [];
+    GROUPS.forEach(function (g) {
+      g.rows.forEach(function (r) {
+        var lane = r.lane || g.lane;
+        r.items.forEach(function (it) {
+          if (it.k === 'mark') {
+            if (ix(it.d) === i) out.push({ it: it, lane: lane, t: it.t, tt: it.tt });
+            return;
+          }
+          var s = ix(it.s), e = ix(it.e), work = lane === 'me' || lane === 'ai', phase = '';
+          if (work && s <= i && i <= e) {
+            phase = it.ongoing ? '期間中（〜' + dayLabel(e) + '）' : (i === e ? '今日が期限' : '期限 ' + dayLabel(e));
+          } else if (!work && (i === s || i === e)) {
+            phase = s === e ? '' : (i === s ? 'はじまり（〜' + dayLabel(e) + '）' : 'この日まで');
+          } else {
+            phase = null;
+          }
+          if (phase !== null) out.push({ it: it, lane: lane, phase: phase, due: work && !it.ongoing && i === e });
+          (it.pins || []).forEach(function (p) {
+            if (ix(p.d) === i) out.push({ it: { id: p.id, title: p.title, note: '', status: it.status }, lane: lane, t: p.t, pinOf: it });
+          });
+        });
+      });
+    });
+    var order = { me: 0, show: 0, ai: 1 };
+    out.sort(function (a, b) {
+      var at = a.t ? 1 : 0, bt = b.t ? 1 : 0;
+      if (at !== bt) return at - bt;
+      if (!at) return (order[a.lane] != null ? order[a.lane] : 2) - (order[b.lane] != null ? order[b.lane] : 2);
+      return toMin(0, a.t) - toMin(0, b.t);
+    });
+    return out;
+  }
+
+  function renderDay() {
+    var i = state.sel, md = mdOf(i);
+    var box = document.getElementById('day');
+    var badge = SHOW[md] ? '<span class="badge">セミナー' + SHOW[md] + '</span>' : '';
+    if (inRange && i === todayAbs) badge += '<span class="badge soft">今日</span>';
+    var html = '<div class="day-head"><h2><span class="dd">' + md + '</span><span>（' + WD[wdOf(i)] + (HOL[md] ? '祝' : '') + '）の予定</span>' + badge + '</h2>' +
+      '<div class="nav"><button type="button" id="prev" aria-label="前の日"' + (i === 0 ? ' disabled' : '') + '>‹</button><button type="button" id="next" aria-label="次の日"' + (i === N - 1 ? ' disabled' : '') + '>›</button></div></div>';
+    var items = dayItems(i);
+    if (!items.length) {
+      html += '<p class="empty">この日に予定はありません。</p>';
+    } else {
+      html += '<ul class="evs">';
+      items.forEach(function (x) {
+        var it = x.it, cls = 'ev lane-' + x.lane;
+        if (x.t && toMin(i, x.t) < nowMin) cls += ' past';
+        if (state.hl && state.hl === it.id) cls += ' hl';
+        var time = x.t ? '<div class="ev-time">' + x.t + '</div>' : '<div class="ev-time all">' + (x.tt || (x.lane === 'me' || x.lane === 'ai' ? '終日' : '期間')) + '</div>';
+        var chips = '';
+        if (x.phase) chips += '<span class="st' + (x.due ? ' now' : '') + '">' + esc(x.phase) + '</span>';
+        if (it.status && STATUS[it.status]) chips += '<span class="st ' + STATUS[it.status][1] + '">' + STATUS[it.status][0] + '</span>';
+        if (it.draft) chips += '<span class="st">下書き</span>';
+        if (done[it.id]) chips += '<span class="st ok">済み</span>';
+        var code = it.code && !it.jp ? '<span class="code">' + esc(it.code) + '</span>' : '';
+        html += '<li class="' + cls + '" data-id="' + esc(it.id) + '">' + time + '<div class="ev-body"><div class="ev-meta"><i class="dot"></i>' + LANE_NAME[x.lane] + chips + '</div>' +
+          '<div class="ev-title">' + code + esc(it.title) + '</div>' + (it.note ? '<p class="ev-note">' + linkify(it.note) + '</p>' : '') + '</div></li>';
+      });
+      html += '</ul>';
+    }
+    box.innerHTML = html;
+    document.getElementById('prev').onclick = function () { select(i - 1); };
+    document.getElementById('next').onclick = function () { select(i + 1); };
+  }
+
+  function allOf(lanes) {
+    var out = [];
+    GROUPS.forEach(function (g) {
+      g.rows.forEach(function (r) {
+        var lane = r.lane || g.lane;
+        if (lanes.indexOf(lane) < 0) return;
+        r.items.forEach(function (it) {
+          out.push({ it: it, lane: lane, due: it.k === 'bar' ? ix(it.e) : ix(it.d), t: it.t });
+          (it.pins || []).forEach(function (p) {
+            if (lane === 'me') out.push({ it: { id: p.id, title: p.title, note: '', k: 'mark', d: p.d }, lane: lane, due: ix(p.d) });
+          });
+        });
+      });
+    });
+    out.sort(function (a, b) {
+      var ao = a.it.ongoing ? 1 : 0, bo = b.it.ongoing ? 1 : 0;
+      if (ao !== bo) return ao - bo;
+      return (a.due - b.due) || (toMin(0, a.t) - toMin(0, b.t));
+    });
+    return out;
+  }
+
+  function countdown(x) {
+    if (done[x.it.id]) return ['済み', 'ok'];
+    if (x.it.ongoing) return ['期間中', ''];
+    var n = x.due - todayAbs;
+    if (n < 0) return ['期限を過ぎました', 'late'];
+    if (n === 0) return ['今日', 'now'];
+    return ['あと' + n + '日', n <= 3 ? 'now' : ''];
+  }
+
+  function dueText(x) {
+    var it = x.it;
+    if (it.ongoing) return dayLabel(ix(it.s)) + '〜' + dayLabel(ix(it.e));
+    if (it.k === 'mark' && it.t) return dayLabel(x.due) + ' ' + it.t;
+    return (it.k === 'bar' ? '期限 ' : '') + dayLabel(x.due);
+  }
+
+  function renderMe() {
+    var box = document.getElementById('me-list');
+    var list = allOf(['me', 'show']);
+    var html = '<h2>鈴木さんのやること<small>終わったらチェック</small></h2><ul class="tlist">';
+    list.forEach(function (x) {
+      var it = x.it, cd = countdown(x), id = 'chk-' + it.id;
+      html += '<li class="task' + (done[it.id] ? ' checked' : '') + '"><input type="checkbox" id="' + id + '" data-id="' + it.id + '"' + (done[it.id] ? ' checked' : '') + '>' +
+        '<label for="' + id + '"><span class="t-title">' + esc(it.k === 'mark' && it.code && x.lane === 'show' ? it.title + '（' + it.t + '〜）' : it.title) + '</span><span class="t-due">' + esc(dueText(x)) + '</span></label>' +
+        '<span class="st ' + cd[1] + '">' + cd[0] + '</span>' + (it.note ? '<p class="t-note">' + linkify(it.note) + '</p>' : '') + '</li>';
+    });
+    box.innerHTML = html + '</ul>';
+    box.querySelectorAll('input[type=checkbox]').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        if (cb.checked) done[cb.dataset.id] = 1; else delete done[cb.dataset.id];
+        saveDone();
+        renderAll();
+      });
+    });
+  }
+
+  function renderAi() {
+    var box = document.getElementById('ai-list');
+    var list = allOf(['ai']);
+    var html = '<h2>Claudeのやること</h2><ul class="tlist">';
+    list.forEach(function (x) {
+      var it = x.it, st = STATUS[it.status] || ['', ''];
+      html += '<li class="task"><i class="mark"></i><div class="tt"><span class="t-title">' + esc(it.title) + '</span><span class="t-due">' + esc(dueText(x)) + '</span></div>' +
+        '<span class="st ' + st[1] + '">' + st[0] + '</span>' + (it.note ? '<p class="t-note">' + linkify(it.note) + '</p>' : '') + '</li>';
+    });
+    html += '</ul><p class="note">10/24までに済んだこと：LPと申込フォーム、未申込の方への一斉配信（A1〜A22・S1）、申込者リマインド（R1〜R9とメール）、開催後フォロー（F0〜F8）、新しく登録した方へのステップ（N1・N2）、終了アンケート、相談カレンダーの期間設定。「見に来る予約」の日時になると、Claudeがこの会話に戻ってきて作業します。</p>';
+    box.innerHTML = html;
+  }
+
+  function renderNow() {
+    var box = document.getElementById('now');
+    var cards = [];
+    var dayText = inRange ? dayLabel(todayAbs) : (todayAbs < 0 ? 'まだ始まっていません' : '期間は終わりました');
+    var todays = inRange ? dayItems(todayAbs).filter(function (x) { return x.t && ['a', 'r', 'f'].indexOf(x.lane) >= 0; }) : [];
+    cards.push({ k: '今日', v: dayText, s: inRange ? (todays.length ? '配信 ' + todays.length + '通：' + todays.map(function (x) { return x.it.code; }).join('・') : '配信はありません') : '' });
+
+    var next = null;
+    GROUPS.forEach(function (g) { g.rows.forEach(function (r) {
+      var lane = r.lane || g.lane;
+      if (['a', 'r', 'f'].indexOf(lane) < 0) return;
+      r.items.forEach(function (it) {
+        if (it.k !== 'mark') return;
+        var m = toMin(ix(it.d), it.t);
+        if (m > nowMin && (!next || m < next.m)) next = { m: m, it: it };
+      });
+    }); });
+    if (next) {
+      var ndi = ix(next.it.d);
+      cards.push({ k: '次の配信', v: '<span class="num">' + (ndi === todayAbs ? '' : mdOf(ndi) + ' ') + next.it.t + '</span>' + esc(next.it.code + ' ' + next.it.title), s: ndi === todayAbs ? '今日' : dayLabel(ndi) });
+    }
+
+    var me = allOf(['me']).filter(function (x) { return !x.it.ongoing && !done[x.it.id] && x.due >= todayAbs; });
+    if (me.length) {
+      var cd = countdown(me[0]);
+      cards.push({ k: '鈴木さんの次の期限', v: esc(me[0].it.title), s: dueText(me[0]) + '・' + cd[0], hot: true });
+    }
+
+    var shows = Object.keys(SHOW).map(function (k) { return { i: ix(k), name: SHOW[k] }; });
+    var ns = shows.filter(function (s) { return toMin(s.i, '20:45') > nowMin; })[0];
+    if (ns) {
+      var diff = ns.i - todayAbs;
+      cards.push({ k: '次の本番', v: '<span class="num">' + mdOf(ns.i) + '</span>' + ns.name + '（' + WD[wdOf(ns.i)] + '）19:30〜', s: diff === 0 ? '今日です' : 'あと' + diff + '日' });
+    }
+    box.innerHTML = cards.map(function (c) {
+      return '<div class="stat' + (c.hot ? ' hot' : '') + '"><span class="k">' + c.k + '</span><span class="v">' + c.v + '</span>' + (c.s ? '<span class="s">' + esc(c.s) + '</span>' : '') + '</div>';
+    }).join('');
+  }
+
+  function renderAll() { renderNow(); renderGantt(); renderDay(); renderMe(); renderAi(); }
+
+  function select(i, hl) {
+    if (i < 0 || i >= N) return;
+    state.sel = i;
+    state.hl = hl || null;
+    gantt.querySelectorAll('.g-day').forEach(function (b) { b.classList.toggle('sel', +b.dataset.day === i); });
+    gantt.querySelectorAll('.g-col').forEach(function (c, k) { c.classList.toggle('sel', k === i); });
+    renderDay();
+    var smooth = !window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var target = hl ? document.querySelector('#day .ev.hl') : null;
+    var box = document.getElementById('day');
+    var top = box.getBoundingClientRect().top;
+    if (top > window.innerHeight * 0.7 || top < 0) {
+      box.scrollIntoView({ block: 'start', behavior: smooth ? 'smooth' : 'auto' });
+    } else if (target) {
+      target.scrollIntoView({ block: 'nearest', behavior: smooth ? 'smooth' : 'auto' });
+    }
+  }
+
+  gantt.addEventListener('click', function (ev) {
+    var t = ev.target.closest('[data-day], .bar');
+    if (!t) return;
+    if (t.classList.contains('bar')) {
+      var s = +t.dataset.s, e = +t.dataset.e, rc = t.getBoundingClientRect();
+      var d = s + Math.floor((ev.clientX - rc.left) / (rc.width / (e - s + 1)));
+      select(Math.min(Math.max(d, s), e), t.dataset.id);
+      return;
+    }
+    select(+t.dataset.day, t.dataset.id || null);
+  });
+
+  renderAll();
+  if (todayIdx > 3) gscroll.scrollLeft = (todayIdx - 2) * 38;
+})();
+</script>
