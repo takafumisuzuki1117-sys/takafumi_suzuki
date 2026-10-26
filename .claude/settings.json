@@ -12,8 +12,6 @@
       "mcp__Gmail__reply",
       "mcp__Gmail__forward",
       "mcp__UTAGE__message_line_chat_message_send",
-      "mcp__UTAGE__message_create",
-      "mcp__UTAGE__message_update",
       "mcp__UTAGE__event_delete",
       "mcp__UTAGE__event_group_delete",
       "mcp__UTAGE__event_member_connect_link_delete",
