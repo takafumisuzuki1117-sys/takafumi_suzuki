@@ -257,7 +257,8 @@
 
 - 並び順：新価格の一括 → 2分割 → 3分割 → 6分割 → 銀行振込 → 旧価格（10/27に並び替え）
 - 申込・決済ページ（11月版のJSON）と特商法（10/27更新）は、分割を「2回・3回・6回」と書いた形
-- **Stripeの価格 price_1UJXqSKaUJd2rBatiZ8OfHpx（月22,000円）は、Zoom集中プラン3分割（商品「JLINE PERSONAL 個別プラン」zErLxLAKHriy・Ukdn7UOXK040、受講中の方用）でも使っている。11/1以降もアーカイブしない**
+- Stripeの価格 price_1UJXqSKaUJd2rBatiZ8OfHpx（月22,000円）は、Zoom集中プラン3分割（商品「JLINE PERSONAL 個別プラン」zErLxLAKHriy・Ukdn7UOXK040）でも使っている。**10/27 鈴木さんの判断でZoom集中は10/31で販売終了**（一括 kb28sZkGsJT1・3分割 Ukdn7UOXK040・銀行振込 PBJtkeslO4G6 の販売期間を10/31 23:59までにした）。11/1以降は¥22,000の価格もアーカイブしてよい
+- 10/27 鈴木さんがStripeの商品名を「JLINEパーソナルコーチ_スタンダード6ヶ月」に変更（価格IDは変わらない）
 - UTAGEのカード一括払いはStripeの商品・価格を使わない（金額だけで決済する）。Stripeの価格が要るのは分割（複数回払い）だけ
 - 10/27 Stripeを見たところ、旧6分割の価格 price_1UJXqSKaUJd2rBatiZ8OfHpx（月22,000円）が「6ヶ月ごと」の請求になっていた。鈴木さんが「1ヶ月ごと」に直した（IDは変わらず）。これまでの申込はすべて一括払いなので、影響を受けた方はいない
 - 旧3分割の価格 price_1UJXrwKaUJd2rBat6Sz3rzL3（月44,000円。スタンダード3分割 pTaew6CHesUx・プレミアム3分割 kMGmCAauUTFt が使用）も「3ヶ月ごと」になっていた。10/27に鈴木さんが「1ヶ月ごと」に直した（IDは変わらず）。これでStripeの分割の価格はすべて毎月の請求になった
