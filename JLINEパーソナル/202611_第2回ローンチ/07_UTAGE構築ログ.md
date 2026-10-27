@@ -253,6 +253,8 @@
 | **スタンダード 6ヶ月（150,000円＋税）｜カード6分割** | LiYumtB3czhU | 27,500×6 | 11/1 0:00〜。Stripeの価格 price_1UV2sZKaUJd2rBatCSw2izxk（毎月27,500円。10/27に鈴木さんが作成） |
 
 - 並び順：新価格の一括 → 6分割 → 銀行振込 → 旧価格（10/27に並び替え）
+- **Stripeの価格 price_1UJXqSKaUJd2rBatiZ8OfHpx（月22,000円）は、Zoom集中プラン3分割（商品「JLINE PERSONAL 個別プラン」zErLxLAKHriy・Ukdn7UOXK040、受講中の方用）でも使っている。11/1以降もアーカイブしない**
+- UTAGEのカード一括払いはStripeの商品・価格を使わない（金額だけで決済する）。Stripeの価格が要るのは分割（複数回払い）だけ
 - 10/27 Stripeを見たところ、旧6分割の価格 price_1UJXqSKaUJd2rBatiZ8OfHpx（月22,000円）が「6ヶ月ごと」の請求になっていた。鈴木さんが「1ヶ月ごと」に直した（IDは変わらず）。これまでの申込はすべて一括払いなので、影響を受けた方はいない
 - 旧3分割の価格 price_1UJXrwKaUJd2rBat6Sz3rzL3（月44,000円。スタンダード3分割 pTaew6CHesUx・プレミアム3分割 kMGmCAauUTFt が使用）も「3ヶ月ごと」になっていた。10/27に鈴木さんが「1ヶ月ごと」に直した（IDは変わらず）。これでStripeの分割の価格はすべて毎月の請求になった
 
