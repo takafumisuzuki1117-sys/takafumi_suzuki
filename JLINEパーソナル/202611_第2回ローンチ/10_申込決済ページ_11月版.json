@@ -1,0 +1,118 @@
+[
+  {
+    "type": "section",
+    "background_color": "#111111",
+    "margin_top": 0,
+    "margin_bottom": 0,
+    "element_id": 1,
+    "children": [
+      {
+        "type": "row",
+        "width": 800,
+        "element_id": 2,
+        "children": [
+          {
+            "type": "col",
+            "element_id": 3,
+            "children": [
+              {"type": "spacer", "height": 36, "element_id": 4},
+              {"type": "text", "padding_side_mobile": 20, "content": "<p style=\"text-align:center\"><span style=\"color:#C8122A\"><strong>JLINE PERSONAL</strong></span></p>", "font_size": 15, "font_size_mobile": 13, "element_id": 5},
+              {"type": "spacer", "height": 10, "element_id": 6},
+              {"type": "head", "padding_side_mobile": 20, "content": "<p style=\"text-align:center\"><span style=\"color:#ffffff\">オンライン伴走サポート<br>お申し込み</span></p>", "font_size": 34, "font_size_mobile": 26, "line_height": "1.4", "element_id": 7},
+              {"type": "spacer", "height": 18, "element_id": 8},
+              {"type": "text", "padding_side_mobile": 24, "content": "<p style=\"text-align:center\"><span style=\"color:rgba(255,255,255,0.85)\">「上手くしてもらう選手」から<br>「自分で上手くなれる選手」へ</span></p>", "font_size": 16, "font_size_mobile": 14, "line_height": "1.9", "padding_side": 40, "element_id": 9},
+              {"type": "spacer", "height": 36, "element_id": 10}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "background_color": "#ffffff",
+    "margin_top": 0,
+    "margin_bottom": 0,
+    "element_id": 11,
+    "children": [
+      {
+        "type": "row",
+        "width": 800,
+        "element_id": 12,
+        "children": [
+          {
+            "type": "col",
+            "element_id": 13,
+            "children": [
+              {"type": "spacer", "height": 32, "element_id": 14},
+              {"type": "subhead", "padding_side_mobile": 20, "content": "<p style=\"text-align:center\"><span style=\"color:#111111\">プランと料金</span></p>", "font_size": 24, "font_size_mobile": 20, "element_id": 15},
+              {"type": "spacer", "height": 8, "element_id": 16},
+              {"type": "text", "padding_side_mobile": 24, "content": "<p style=\"text-align:center\"><span style=\"color:#555555\">ワンプレー相談でお伝えした内容をご確認のうえ、お申し込みください。<br>ご不明な点は、公式LINEでご相談ください。</span></p>", "font_size": 15, "font_size_mobile": 14, "line_height": "1.75", "padding_side": 40, "element_id": 17},
+              {"type": "spacer", "height": 20, "element_id": 18},
+              {"type": "text", "css_class": "jl-box jl-rec", "content": "<p><span style=\"color:#C8122A\"><strong>スタンダード｜自走型選手育成プラン</strong></span></p><p><strong>6ヶ月　165,000円（税込）</strong><br>クレジットカード6分割なら 月27,500円（税込）</p><p>・Zoom：月1回（60分）<br>・動画解説：月1回（提出から3日以内に返却）<br>・開始時のセットアップMTG（保護者の方・30分）<br>・週次チェックイン<br>・Chatwork相談（24時間以内に返信）<br>・オンラインイベント参加権とアーカイブ</p><p>最初の2ヶ月はコーチが見方を示し、次の2ヶ月は本人が先に見立てを出し、最後の2ヶ月は本人が回します。6ヶ月で、コーチがいなくても自分で試合を振り返れる状態まで持っていきます。</p>", "font_size": 15, "font_size_mobile": 14, "line_height": "1.8", "background_color": "#FFF5F5", "element_id": 19},
+              {"type": "spacer", "height": 28, "element_id": 26},
+              {"type": "subhead", "padding_side_mobile": 20, "content": "<p style=\"text-align:center\"><span style=\"color:#111111\">お申し込み前にご確認ください</span></p>", "font_size": 24, "font_size_mobile": 20, "element_id": 27},
+              {"type": "spacer", "height": 16, "element_id": 28},
+              {"type": "bullet", "css_class": "jl-text", "padding_side_mobile": 20, "content": "<ul><li>動画解説の対象は試合動画のみです。試合の前半または後半をまるごとご用意ください。引いた画角で撮影いただければ、編集は不要です。ご提出から3日以内にお返しします</li><li>動画解説の依頼・Zoomの予約は、お子様または親御さん自身で行っていただきます。当社から予約を代行することはありません</li><li>その月に利用できなかった動画解説・Zoomは、翌月末まで繰り越せます（最終月の分も同様です）。それまでに利用しなかった分の期間延長・返金はありません</li><li><strong>最初の1ヶ月は、ご満足いただけない場合に全額返金いたします。</strong>2ヶ月目以降は、期間途中の解約および返金は行っておりません（病気・怪我などやむを得ない事情は個別にご相談ください）</li><li><strong>分割払い（月払い）をご希望の場合は、クレジットカード決済をお選びください。</strong>最大6回（月27,500円）までです。銀行振込は一括払いのみとなります</li><li>表示価格は税込です（本体価格150,000円＋消費税15,000円）</li><li>この料金は2026年11月1日以降にお申し込みの方に適用されます</li><li>本サービスは、技術向上・試合出場・セレクション合格などの成果を保証するものではありません</li></ul>", "check_style": "check-red", "item_spacing": 10, "font_size": 15, "font_size_mobile": 14, "line_height": "1.7", "padding_side": 40, "element_id": 29},
+              {"type": "spacer", "height": 16, "element_id": 30},
+              {"type": "text", "css_class": "jl-text", "padding_side_mobile": 22, "content": "<p>この講座は、お子様が「自分で考え、自分で動く」ことを何より大切にしています。予約を自分で行うことも、その一部です。ご理解のうえお申し込みください。</p>", "font_size": 15, "font_size_mobile": 14, "line_height": "1.8", "padding_side": 40, "element_id": 31},
+              {"type": "spacer", "height": 36, "element_id": 32}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "background_color": "#F5F5F5",
+    "margin_top": 0,
+    "margin_bottom": 0,
+    "element_id": 33,
+    "children": [
+      {
+        "type": "row",
+        "width": 800,
+        "element_id": 34,
+        "children": [
+          {
+            "type": "col",
+            "element_id": 35,
+            "children": [
+              {"type": "spacer", "height": 32, "element_id": 36},
+              {"type": "subhead", "padding_side_mobile": 20, "content": "<p style=\"text-align:center\"><span style=\"color:#111111\">お申し込みフォーム</span></p>", "font_size": 24, "font_size_mobile": 20, "element_id": 37},
+              {"type": "spacer", "height": 12, "element_id": 38},
+              {"type": "text", "padding_side_mobile": 24, "content": "<p style=\"text-align:center\"><span style=\"color:#555555\">支払方法を選び、利用規約に同意のうえお進みください。<br>「カード決済」または「銀行振込」をお選びいただけます。<br><span style=\"color:#C8122A\">分割払いをご希望の場合は、カード決済をお選びください。</span></span></p>", "font_size": 15, "font_size_mobile": 14, "line_height": "1.75", "padding_side": 40, "element_id": 39},
+              {"type": "spacer", "height": 20, "element_id": 40},
+              {"type": "payment", "padding_top_mobile": 20, "padding_bottom_mobile": 20, "padding_side_mobile": 12, "product_id": "VPbnjRgPOGLX", "require_address": 0, "require_phone": 1, "redirect_type": "url", "redirect_url": "https://utage-system.com/p/5w8teMBIN8QX", "bank_redirect_type": "url", "bank_redirect_url": "https://utage-system.com/p/CIV3MZNimeil", "require_agreement": 1, "agreement_style": "check-red", "agreement_label": "利用規約", "agreement_text": "利用規約を確認し、以下の内容に同意します。\n・動画解説・Zoomの予約は自分で行うこと。未利用分は翌月末まで繰り越せるが、それを過ぎた分の期間延長・返金はないこと\n・最初の1ヶ月は全額返金の対象だが、それ以降は期間途中の解約・返金ができないこと\n・分割払いの場合も契約期間全体が対象となり、途中で支払いを停止できないこと", "terms_text": "■ JLINE PERSONAL 利用規約（要約）\n\n本サービスは、株式会社アスリートバリューが提供するオンライン伴走サポートです。申込フォームで本規約に同意し手続きを完了した時点で契約が成立します。\n\n【予約と利用について】\n動画解説の依頼・Zoomの予約は、受講者または申込者自身が行います。その月に利用できなかった回数分は、翌月末まで繰り越して利用できます（最終月の分も同様です）。翌月末までに利用されなかった回数分の期間延長・返金は行いません。Zoomの日程変更は24時間前までにご連絡ください。\n\n【返金保証について】\nサービス開始から1ヶ月以内にご満足いただけない場合は、お申し出により、お支払いいただいた全額を返金します。\n\n【中途解約について】\n最初の1ヶ月を過ぎた後は、申込者の都合による期間途中の解約はできません。お支払いいただいた料金も返金しません。受講者の長期の病気・怪我などやむを得ない事情がある場合は、個別に協議のうえ対応を検討します。\n\n【料金について】\n表示価格は税込です（本体価格150,000円＋消費税15,000円）。分割払い（月払い）をご希望の場合はクレジットカード決済をお選びください。最大6回までです。銀行振込は一括払いのみとなります。分割払いの場合も契約期間全体が対象となり、途中で支払いを停止することはできません。\n\n【成果について】\n本サービスは、技術向上・試合出場・セレクション合格・進路等の成果を保証するものではありません。\n\n規約全文：https://utage-system.com/p/uniJTi0dDy7u", "select_product_label": "お支払い方法", "select_amount_label": "金額", "purchase_product_label": "お申し込み内容", "purchase_amount_label": "お支払い金額", "content": "<p style=\"text-align:center\"><span style=\"color:#777777\">お支払い方法をお選びください。</span></p>", "font_size": 14, "font_size_mobile": 13, "background_color": "#ffffff", "border_width": 1, "border_color": "#cccccc", "border_radius": 8, "padding_top": 24, "padding_bottom": 24, "padding_side": 32, "element_id": 41},
+              {"type": "spacer", "height": 20, "element_id": 42},
+              {"type": "text", "padding_side_mobile": 20, "content": "<p style=\"text-align:center\"><span style=\"color:#777777\"><a href=\"https://utage-system.com/p/uniJTi0dDy7u\" target=\"_blank\">利用規約</a>　｜　<a href=\"https://utage-system.com/p/3pBKmhWIwpmK\" target=\"_blank\">特定商取引法に基づく表記</a>　｜　<a href=\"https://utage-system.com/p/n82sblV0s4K4\" target=\"_blank\">プライバシーポリシー</a></span></p>", "font_size": 13, "font_size_mobile": 12, "line_height": "1.8", "padding_side": 40, "element_id": 43},
+              {"type": "spacer", "height": 36, "element_id": 44}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "background_color": "#111111",
+    "margin_top": 0,
+    "element_id": 45,
+    "children": [
+      {
+        "type": "row",
+        "element_id": 46,
+        "children": [
+          {
+            "type": "col",
+            "element_id": 47,
+            "children": [
+              {"type": "footer", "privacy_url": "https://utage-system.com/p/n82sblV0s4K4", "commercial_law_url": "https://utage-system.com/p/3pBKmhWIwpmK", "company_url": "https://www.athletevalue.jp/", "copyright_text": "Athlete Value inc.", "color": "#ffffff", "copyright_color": "rgba(255,255,255,0.4)", "padding_top": 16, "padding_bottom": 16, "element_id": 48}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
