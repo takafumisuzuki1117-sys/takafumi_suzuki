@@ -1,6 +1,18 @@
 {
   "permissions": {
+    "allow": [
+      "mcp__UTAGE",
+      "mcp__Google_Drive",
+      "mcp__Google_Docs",
+      "mcp__Google_Sheets",
+      "mcp__claude-code-remote",
+      "Bash",
+      "Read",
+      "Edit",
+      "Write"
+    ],
     "ask": [
+      "mcp__UTAGE__payment_purchase_delete",
       "mcp__Google_Drive__trash_file",
       "mcp__Google_Drive__share_file",
       "mcp__Claude_Docs__delete",
