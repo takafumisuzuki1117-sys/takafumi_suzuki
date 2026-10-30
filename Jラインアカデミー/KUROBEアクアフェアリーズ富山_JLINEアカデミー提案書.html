@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap">
 <style>
-  /* Layout: A4一枚に収まる提案書。見出し → 学びの流れ → 2つの学び方の表（競技力＝水色／キャリア＝琥珀色で色分け） → 実績と進め方の2段組 → 運営者 */
+  /* Layout: A4二枚の提案書。1枚目＝見出し → 学びの流れ → 2つの学び方の表（競技力＝水色／キャリア＝琥珀色）→ 実施風景の写真。2枚目＝カターレ富山での実績（写真・年表・選手の変化）→ 仕組み → 進め方 → 運営者 */
   :root {
     --paper: #ffffff;
     --ink: #13303a;
@@ -43,10 +43,12 @@
            padding-block: 28px 40px;
            padding-left: max(16px, env(safe-area-inset-left, 0px));
            padding-right: max(16px, env(safe-area-inset-right, 0px));
-           display: grid; gap: 18px; }
+           display: grid; gap: 22px; }
+  .page { display: grid; gap: 18px; align-content: start; }
   h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
   p { margin: 0; }
   b { font-weight: 700; }
+  a { color: var(--court); }
 
   /* 見出し */
   header { display: grid; gap: 8px; padding-bottom: 14px; border-bottom: 3px solid var(--ink); }
@@ -61,7 +63,7 @@
   .intro { max-width: 68ch; }
 
   /* 学び → 育つ力 → 競技力／キャリア */
-  .flow { display: grid; grid-template-columns: auto auto 1.7fr auto 1fr 1fr; align-items: stretch; gap: 8px; }
+  .flow { display: grid; grid-template-columns: auto auto 2.2fr auto 1fr 1fr; align-items: stretch; gap: 8px; }
   .flow > div { min-width: 0; border-radius: 8px; padding: 7px 12px; display: grid; align-content: center; gap: 1px; }
   .flow .arrow { align-self: center; color: var(--muted); font-weight: 700; padding: 0; }
   .flow .learn { background: var(--panel); }
@@ -74,7 +76,7 @@
   .flow .o2 .v { color: var(--career); }
 
   /* 表 */
-  section { display: grid; gap: 8px; }
+  section { display: grid; gap: 8px; align-content: start; }
   h2 { font-size: 16px; font-weight: 900; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; }
   h2 small { font-family: var(--font-body); font-size: 12px; font-weight: 500; color: var(--muted); }
   table { width: 100%; border-collapse: collapse; font-size: 12.5px; line-height: 1.5; }
@@ -91,39 +93,54 @@
                 border-bottom: 1px solid var(--ink); }
   tr.group th span { font-family: var(--font-body); font-size: 11.5px; font-weight: 500; color: var(--muted); margin-left: 8px; }
 
-  /* 下段 */
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .cols > section { min-width: 0; align-content: start; }
+  /* 写真 */
+  .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0; }
+  .photos.two { grid-template-columns: repeat(2, 1fr); }
+  figure { margin: 0; display: grid; gap: 4px; min-width: 0; }
+  figure img { display: block; width: 100%; max-width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 6px; background: var(--panel); }
+  .photos.two figure img { aspect-ratio: 4 / 3; }
+  figcaption { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+  figcaption b { color: var(--ink); margin-right: 4px; }
+  figcaption .t-court { color: var(--court); }
+  figcaption .t-career { color: var(--career); }
+
+  /* 2枚目 */
+  .cols { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
+  .cols > * { min-width: 0; }
   .timeline { display: grid; gap: 3px; font-size: 12.5px; margin: 0; }
   .timeline div { display: grid; grid-template-columns: 7.2em 1fr; gap: 8px; }
   .timeline dt { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
   .timeline dd { margin: 0; }
-  .change { background: var(--panel); border-radius: 8px; padding: 8px 12px; font-size: 12.5px; display: grid; gap: 3px; }
+  .change { background: var(--panel); border-radius: 8px; padding: 8px 12px; font-size: 12.5px; display: grid; gap: 4px; }
   .change .k { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--muted); }
   .stats { display: flex; flex-wrap: wrap; gap: 2px 16px; font-size: 12px; color: var(--muted); }
   .stats b { font-family: var(--font-display); font-size: 17px; color: var(--ink); margin-right: 2px; font-variant-numeric: tabular-nums; }
 
-  .cycle { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 12.5px; counter-reset: c; }
+  .cycle { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 12.5px; counter-reset: c; }
   .cycle li { display: grid; grid-template-columns: 1.4em 6.8em 1fr; gap: 4px; align-items: baseline; counter-increment: c; }
   .cycle li::before { content: counter(c); font-family: var(--font-display); font-weight: 900; color: var(--court);
                       font-variant-numeric: tabular-nums; }
-  .steps { display: grid; gap: 3px; font-size: 12.5px; }
-  .steps div { display: grid; grid-template-columns: 4.2em 1fr; gap: 6px; align-items: baseline; }
-  .steps .s { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--career); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .steps > div { min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; display: grid; gap: 2px; align-content: start; font-size: 12.5px; }
+  .steps .s { font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--career); }
+  .steps .ttl { font-family: var(--font-display); font-weight: 900; font-size: 14px; }
   .note { font-size: 12px; color: var(--muted); }
-  .cta { border: 1.5px solid var(--ink); border-radius: 8px; padding: 7px 12px; font-weight: 700; font-size: 13px; }
+  .cta { border: 1.5px solid var(--ink); border-radius: 8px; padding: 8px 12px; font-weight: 700; font-size: 13.5px;
+         display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 16px; }
+  .cta span { font-weight: 500; font-size: 12px; color: var(--muted); }
 
   footer { border-top: 1px solid var(--line); padding-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px;
            font-size: 11.5px; color: var(--muted); }
   footer > * { min-width: 0; }
-  footer .org { grid-column: 1 / -1; font-weight: 700; color: var(--ink); }
+  footer .org { grid-column: 1 / -1; font-weight: 700; color: var(--ink); display: flex; flex-wrap: wrap; gap: 2px 14px; }
+  footer .org a { font-weight: 500; overflow-wrap: anywhere; }
   footer b { color: var(--ink); margin-right: 6px; }
 
   @media (max-width: 720px) {
     .flow { grid-template-columns: 1fr 1fr; }
     .flow .arrow { display: none; }
     .flow .learn, .flow .power { grid-column: 1 / -1; }
-    .cols { grid-template-columns: 1fr; }
+    .cols, .steps { grid-template-columns: 1fr; }
     footer { grid-template-columns: 1fr; }
     table, thead, tbody, tr, th, td { display: block; width: auto; }
     thead { display: none; }
@@ -135,138 +152,188 @@
     td.court::before { color: var(--court); }
     td.career::before { color: var(--career); }
   }
+  @media (max-width: 560px) {
+    .photos { grid-template-columns: 1fr; }
+  }
 
-  @page { size: A4; margin: 8mm 10mm; }
+  @page { size: A4; margin: 9mm 10mm; }
   @media print {
     :root { --paper: #ffffff; --ink: #13303a; --muted: #556a71; --line: #d3dfe2; --panel: #f2f7f8;
             --court: #0b7484; --court-soft: #e3f2f4; --career: #b0650f; --career-soft: #fbefe0; color-scheme: light; }
-    body { font-size: 8.5pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .sheet { max-width: none; padding: 0; gap: 3.4mm; }
-    header { gap: 1.2mm; padding-bottom: 2.4mm; }
-    .eyebrow { font-size: 7.5pt; }
-    .meta { font-size: 7.8pt; }
-    h1 { font-size: 17pt; }
-    h1 .to { font-size: 10pt; }
-    .catch { font-size: 13pt; }
+    body { font-size: 9pt; line-height: 1.55; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    a { color: var(--court); text-decoration: none; }
+    .sheet { max-width: none; padding: 0; gap: 0; }
+    .page { gap: 4.2mm; }
+    .page + .page { break-before: page; }
+    header { gap: 1.6mm; padding-bottom: 3mm; }
+    .eyebrow { font-size: 7.8pt; }
+    .meta { font-size: 8pt; }
+    h1 { font-size: 18.5pt; }
+    h1 .to { font-size: 10.5pt; }
+    .catch { font-size: 14pt; }
     .intro { max-width: none; }
-    .flow { gap: 1.6mm; }
-    .flow > div { padding: 1.4mm 2.6mm; }
-    .flow .k { font-size: 7pt; }
-    .flow .v { font-size: 8.4pt; }
-    section { gap: 1.4mm; }
-    h2 { font-size: 10.4pt; }
-    h2 small { font-size: 7.8pt; }
-    table { font-size: 8pt; line-height: 1.45; }
-    th, td { padding: 1.1mm 1.6mm; }
-    thead th { font-size: 7.4pt; }
-    tr.group th { padding: 1.6mm 1.6mm 0.7mm; font-size: 8.4pt; }
-    tr.group th span { font-size: 7.3pt; }
-    .cols { gap: 5mm; }
-    .timeline, .cycle, .steps, .change { font-size: 8pt; }
-    .change { padding: 1.4mm 2.6mm; gap: 0.6mm; }
-    .change .k { font-size: 7pt; }
-    .stats { font-size: 7.6pt; }
-    .stats b { font-size: 10.5pt; }
-    .steps .s { font-size: 7pt; }
-    .note { font-size: 7.5pt; }
-    .cta { padding: 1.4mm 2.6mm; font-size: 8.4pt; }
-    footer { font-size: 7.2pt; padding-top: 1.8mm; gap: 0.6mm 5mm; }
-    tr, .flow { break-inside: avoid; }
+    .flow { gap: 1.8mm; }
+    .flow > div { padding: 1.8mm 3mm; }
+    .flow .k { font-size: 7.4pt; }
+    .flow .v { font-size: 9pt; }
+    section { gap: 2mm; }
+    h2 { font-size: 11.5pt; }
+    h2 small { font-size: 8.2pt; }
+    table { font-size: 8.2pt; line-height: 1.48; }
+    th, td { padding: 1.3mm 1.8mm; }
+    thead th { font-size: 7.8pt; }
+    tr.group th { padding: 2.2mm 1.8mm 1mm; font-size: 9pt; }
+    tr.group th span { font-size: 7.8pt; }
+    .photos { gap: 3mm; }
+    figure { gap: 1.2mm; }
+    figcaption { font-size: 7.8pt; }
+    .cols { gap: 6mm; }
+    .timeline, .cycle, .change { font-size: 8.6pt; }
+    .timeline, .cycle { gap: 1mm; }
+    .change { padding: 2.2mm 3mm; gap: 1mm; }
+    .change .k { font-size: 7.6pt; }
+    .stats { font-size: 8.2pt; }
+    .stats b { font-size: 12pt; }
+    .steps { gap: 3mm; }
+    .steps > div { padding: 2.2mm 3mm; font-size: 8.6pt; }
+    .steps .s { font-size: 7.4pt; }
+    .steps .ttl { font-size: 10pt; }
+    .note { font-size: 8.2pt; }
+    .cta { padding: 2.2mm 3mm; font-size: 9.6pt; }
+    .cta span { font-size: 8.2pt; }
+    footer { font-size: 7.8pt; padding-top: 2.4mm; gap: 1mm 6mm; }
+    tr, .flow, figure, .steps > div { break-inside: avoid; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
 <main class="sheet">
-  <header>
-    <div class="top">
-      <span class="eyebrow">JLINE ACADEMY ｜ ご提案</span>
-      <span class="meta">株式会社アスリートバリュー　代表 鈴木 崇文 ／ 2026年10月</span>
-    </div>
-    <h1><span class="to">KUROBEアクアフェアリーズ富山 様</span>JLINEアカデミーのご提案</h1>
-    <p class="catch"><span class="c1">競技力を伸ばす学び</span>は、そのまま<span class="c2">選手のキャリアの力</span>になる。</p>
-    <p class="intro">JLINEアカデミーは、元Jリーガーが立ち上げたアスリート向けの育成プログラムです。座学と体験の両方から、自分で考え、伝え、チームで動く力を育てます。ねらいは今の競技力を伸ばすこと。そこで身につけた力は、競技を終えたあとも選手を支える土台になります。</p>
-  </header>
+  <div class="page">
+    <header>
+      <div class="top">
+        <span class="eyebrow">JLINE ACADEMY ｜ ご提案</span>
+        <span class="meta">株式会社アスリートバリュー　代表 鈴木 崇文 ／ 2026年10月</span>
+      </div>
+      <h1><span class="to">KUROBEアクアフェアリーズ富山 様</span>JLINEアカデミーのご提案</h1>
+      <p class="catch"><span class="c1">競技力を伸ばす学び</span>は、そのまま<span class="c2">選手のキャリアの力</span>になる。</p>
+      <p class="intro">JLINEアカデミーは、元Jリーガーが立ち上げたアスリートの育成プログラムです。座学と体験の両方から、自分で考え、伝え、チームで動く力を育てます。ねらいは今の競技力を伸ばすこと。身につけた力は、競技を終えたあとも選手を支える土台になります。</p>
+    </header>
 
-  <div class="flow" aria-label="学びから成果までの流れ">
-    <div class="learn"><span class="k">学び方</span><span class="v">座学 ＋ 体験</span></div>
-    <div class="arrow" aria-hidden="true">→</div>
-    <div class="power"><span class="k">育つ力（社会人基礎力）</span><span class="v">考え抜く力 ／ 前に踏み出す力 ／ チームで働く力</span></div>
-    <div class="arrow" aria-hidden="true">→</div>
-    <div class="o1"><span class="k">コートで</span><span class="v">競技力が伸びる</span></div>
-    <div class="o2"><span class="k">競技を終えたあとも</span><span class="v">キャリアの力になる</span></div>
+    <div class="flow" aria-label="学びから成果までの流れ">
+      <div class="learn"><span class="k">学び方</span><span class="v">座学 ＋ 体験</span></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="power"><span class="k">育つ力（社会人基礎力）</span><span class="v">考え抜く力 ／ 前に踏み出す力 ／ チームで働く力</span></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="o1"><span class="k">コートで</span><span class="v">競技力が伸びる</span></div>
+      <div class="o2"><span class="k">競技を終えたあとも</span><span class="v">キャリアの力になる</span></div>
+    </div>
+
+    <section>
+      <h2>学び方は2つ<small>どちらか一方でも、組み合わせても実施できます</small></h2>
+      <table>
+        <thead>
+          <tr><th>プログラム</th><th>内容</th><th class="h-court">競技力につながる</th><th class="h-career">キャリアにつながる</th></tr>
+        </thead>
+        <tbody>
+          <tr class="group"><th colspan="4">座学で学ぶ<span>研修・1on1（オンラインでも実施可）</span></th></tr>
+          <tr>
+            <td class="name">自己分析</td>
+            <td class="what" data-label="内容">行動特性診断とモチベーショングラフで、強みや調子の波を整理し「自分の取扱説明書」をつくる</td>
+            <td class="court" data-label="競技力につながる">調子の崩れ方と、立て直し方を知る</td>
+            <td class="career" data-label="キャリアにつながる">自分の強みを、自分の言葉で説明できる</td>
+          </tr>
+          <tr>
+            <td class="name">目標設定・行動設計</td>
+            <td class="what" data-label="内容">技術・身体・頭脳・人間性の4領域で現在地を整理し、行動に落とせる目標と「壁への対策」をつくる</td>
+            <td class="court" data-label="競技力につながる">練習の目的がはっきりし、毎日の練習の質が上がる</td>
+            <td class="career" data-label="キャリアにつながる">目標から逆算して計画し、振り返って改善する力</td>
+          </tr>
+          <tr>
+            <td class="name">コミュニケーション・メディア研修</td>
+            <td class="what" data-label="内容">伝える力・聞く力を学ぶ。メディア研修は元アナウンサーが講師となり、インタビュー対応も練習する</td>
+            <td class="court" data-label="競技力につながる">プレー中に短く正確に伝える</td>
+            <td class="career" data-label="キャリアにつながる">取材やSNSでの発信、仕事での報告・説明</td>
+          </tr>
+          <tr>
+            <td class="name">1on1（月1回）</td>
+            <td class="what" data-label="内容">研修の学びを一人ひとりの課題につなげ、目標の振り返りと次の一手を一緒に考える</td>
+            <td class="court" data-label="競技力につながる">振り返りから次の試合での改善まで、毎月回り続ける</td>
+            <td class="career" data-label="キャリアにつながる">考えを言葉にして整理し、自分で決める習慣</td>
+          </tr>
+          <tr class="group"><th colspan="4">体験で学ぶ<span>体験型プログラム</span></th></tr>
+          <tr>
+            <td class="name">ブラインドサッカー体験</td>
+            <td class="what" data-label="内容">アイマスクで視覚をOFFにし、声だけで動く・動かす。監督・スタッフも選手と同じ立場で参加する</td>
+            <td class="court" data-label="競技力につながる">レシーブやブロックの連携に欠かせない、声かけの量と質</td>
+            <td class="career" data-label="キャリアにつながる">相手に伝わる伝え方、信頼して任せる力、多様性への理解</td>
+          </tr>
+          <tr>
+            <td class="name">スポGOMI</td>
+            <td class="what" data-label="内容">ごみ拾いのチーム競技。作戦を立て、60分で拾った量と種類を競う。ファンとの混成チームも可</td>
+            <td class="court" data-label="競技力につながる">状況を見て作戦を直す力。タイムアウト中の修正と同じ</td>
+            <td class="career" data-label="キャリアにつながる">リーダーシップ、初対面の人と協働する力</td>
+          </tr>
+          <tr>
+            <td class="name">スポンサー営業への同行</td>
+            <td class="what" data-label="内容">チームの社員の営業に同行し、訪問先の事前調査から商談の場までを体験する</td>
+            <td class="court" data-label="競技力につながる">支えてくれる人を知り、応援に応える意識が強まる</td>
+            <td class="career" data-label="キャリアにつながる">仕事の現場を知り、社会人との接点を持つ</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>カターレ富山での実施風景</h2>
+      <div class="photos">
+        <figure>
+          <img src="images/kataller_lecture.jpg" alt="クラブハウスの会議室で、選手たちが講師の話を聞きながらワークシートに書き込んでいる">
+          <figcaption><b class="t-court">座学</b>クラブハウスでの研修。学んだことをその場でシートに書き出す</figcaption>
+        </figure>
+        <figure>
+          <img src="images/kataller_blindsoccer_play.jpg" alt="体育館で、アイマスクをつけた選手たちが声を頼りにボールを追っている">
+          <figcaption><b class="t-career">体験</b>アイマスクをつけ、仲間の声を頼りに動く</figcaption>
+        </figure>
+        <figure>
+          <img src="images/kataller_blindsoccer_team.jpg" alt="ブラインドサッカー体験を終えた選手・監督・スタッフが体育館で集合写真に収まっている">
+          <figcaption><b class="t-career">体験</b>選手・監督・スタッフ全員でブラインドサッカー体験</figcaption>
+        </figure>
+      </div>
+    </section>
   </div>
 
-  <section>
-    <h2>学び方は2つ<small>どちらか一方でも、組み合わせても実施できます</small></h2>
-    <table>
-      <thead>
-        <tr><th>プログラム</th><th>内容</th><th class="h-court">競技力につながる</th><th class="h-career">キャリアにつながる</th></tr>
-      </thead>
-      <tbody>
-        <tr class="group"><th colspan="4">座学で学ぶ<span>研修・1on1（オンラインでも実施可）</span></th></tr>
-        <tr>
-          <td class="name">自己分析</td>
-          <td class="what" data-label="内容">行動特性診断とモチベーショングラフで、強みや調子の波を整理し「自分の取扱説明書」をつくる</td>
-          <td class="court" data-label="競技力につながる">調子が落ちる条件を知り、崩れたときの立て直し方を持てる</td>
-          <td class="career" data-label="キャリアにつながる">自分の強みを、自分の言葉で説明できる</td>
-        </tr>
-        <tr>
-          <td class="name">目標設定・行動設計</td>
-          <td class="what" data-label="内容">技術・身体・頭脳・人間性の4領域で現在地を整理し、行動に落とせる目標と「壁への対策」をつくる</td>
-          <td class="court" data-label="競技力につながる">練習の目的がはっきりし、毎日の練習の質が上がる</td>
-          <td class="career" data-label="キャリアにつながる">目標から逆算して計画し、振り返って改善する力</td>
-        </tr>
-        <tr>
-          <td class="name">コミュニケーション・メディア研修</td>
-          <td class="what" data-label="内容">伝える力・聞く力を学ぶ。メディア研修は元アナウンサーが講師となり、インタビュー対応も練習する</td>
-          <td class="court" data-label="競技力につながる">プレー中に、短く正確に伝える</td>
-          <td class="career" data-label="キャリアにつながる">取材やSNSでの発信、仕事での報告・説明</td>
-        </tr>
-        <tr>
-          <td class="name">1on1（月1回）</td>
-          <td class="what" data-label="内容">研修の学びを一人ひとりの課題につなげ、目標の振り返りと次の一手を一緒に考える</td>
-          <td class="court" data-label="競技力につながる">振り返り → 課題 → 次の試合で改善、のサイクルが回り続ける</td>
-          <td class="career" data-label="キャリアにつながる">考えを言葉にして整理し、自分で決める習慣</td>
-        </tr>
-        <tr class="group"><th colspan="4">体験で学ぶ<span>体験型プログラム</span></th></tr>
-        <tr>
-          <td class="name">ブラインドサッカー体験</td>
-          <td class="what" data-label="内容">アイマスクで視覚をOFFにし、声だけで動く・動かす。監督・スタッフも選手と同じ立場で参加する</td>
-          <td class="court" data-label="競技力につながる">レシーブやブロックの連携に欠かせない、声かけの量と質</td>
-          <td class="career" data-label="キャリアにつながる">相手に伝わる伝え方、信頼して任せる力、多様性への理解</td>
-        </tr>
-        <tr>
-          <td class="name">スポGOMI</td>
-          <td class="what" data-label="内容">ごみ拾いのチーム競技。3〜5人で作戦を立て、60分で拾った量と種類を競う。ファンとの混成チームも可</td>
-          <td class="court" data-label="競技力につながる">状況を見て作戦を修正する力。タイムアウト中の修正と同じ</td>
-          <td class="career" data-label="キャリアにつながる">リーダーシップ、初対面の人と協働する力、地域とのつながり</td>
-        </tr>
-        <tr>
-          <td class="name">スポンサー営業への同行</td>
-          <td class="what" data-label="内容">チームの社員の営業に同行し、訪問先の事前調査から商談の場までを体験する</td>
-          <td class="court" data-label="競技力につながる">誰に支えられているかを知り、応援に応える意識が強くなる</td>
-          <td class="career" data-label="キャリアにつながる">仕事の現場を知り、社会人との接点を持つ</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <div class="cols">
+  <div class="page">
     <section>
-      <h2>カターレ富山での取り組み</h2>
-      <dl class="timeline">
-        <div><dt>2025年3〜6月</dt><dd>若手選手向けの講義（全6回）と行動特性診断</dd></div>
-        <div><dt>2026年1月〜</dt><dd>若手育成プロジェクト（1年半）：月1回の1on1、メディア研修</dd></div>
-        <div><dt>2026年7月</dt><dd>キャンプで、チーム全体のブラインドサッカー体験</dd></div>
-        <div><dt>準備中</dt><dd>スポンサー営業同行、スポGOMI（2027年春）</dd></div>
-      </dl>
+      <h2>カターレ富山での取り組み<small>2025年から継続。研修だけの実施から、1on1と体験まで組み合わせる形に広がっています</small></h2>
+      <div class="photos two">
+        <figure>
+          <img src="images/kataller_online.jpg" alt="クラブハウスの会議室で、選手たちが画面に映るオンラインの講師の話を聞いている">
+          <figcaption><b class="t-court">座学</b>講師とオンラインでつないだ研修。シーズン中も実施できる</figcaption>
+        </figure>
+        <figure>
+          <img src="images/kataller_blindsoccer_talk.jpg" alt="体育館で、床に座った選手たちがブラインドサッカーの選手の話を聞いている">
+          <figcaption><b class="t-career">体験</b>体験の前に、ブラインドサッカーの選手から競技の話を聞く</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div class="cols">
+      <section>
+        <dl class="timeline">
+          <div><dt>2025年3〜6月</dt><dd>若手選手向けの講義（全6回）と行動特性診断</dd></div>
+          <div><dt>2026年1月〜</dt><dd>若手育成プロジェクト（1年半）。1on1、メディア研修</dd></div>
+          <div><dt>2026年7月</dt><dd>キャンプで、チーム全体のブラインドサッカー体験</dd></div>
+          <div><dt>準備中</dt><dd>スポンサー営業同行、スポGOMI（2027年春）</dd></div>
+        </dl>
+        <p class="stats"><span><b>3</b>クラブで実施（カターレ富山・FC町田ゼルビア・ザスパ群馬）</span><span><b>50</b>名以上のJリーガーが受講</span></p>
+      </section>
       <div class="change">
         <span class="k">選手の変化</span>
-        <p>初回の1on1では「全試合出場」など、なりたい状態だけの目標でした。半年後には選手自身が「ゴール＋アシスト10」と数字で目標を立て、残り試合数からペースを逆算するようになっています。ブラインドサッカー体験では「声で人を動かせる」との声もありました。</p>
+        <p>初回の1on1では「全試合出場」など、なりたい状態だけの目標でした。半年後には選手自身が「ゴール＋アシスト10」と数字で目標を立て、残り試合数からペースを逆算するようになっています。</p>
+        <p>ブラインドサッカー体験では「声で人を動かせる」との声もありました。</p>
       </div>
-      <p class="stats"><span><b>3</b>クラブで実施（カターレ富山・FC町田ゼルビア・ザスパ群馬）</span><span><b>50</b>名以上のJリーガーが受講</span></p>
-    </section>
+    </div>
 
     <section>
       <h2>「やって終わり」にしない仕組み</h2>
@@ -277,22 +344,25 @@
         <li><b>1on1</b><span>競技で試す行動を1つ決める</span></li>
         <li><b>共有会</b><span>選手同士で学びを発表し合う</span></li>
       </ol>
+    </section>
+
+    <section>
       <h2>進め方のご提案</h2>
       <div class="steps">
-        <div><span class="s">STEP 1</span><span><b>まずは1回から。</b>研修か体験会を1回（例：ブラインドサッカー体験 60分）</span></div>
-        <div><span class="s">STEP 2</span><span><b>組み合わせる。</b>チームの課題に合う座学と体験を選ぶ</span></div>
-        <div><span class="s">STEP 3</span><span><b>通年で伴走。</b>月1回の1on1で、目標から振り返りまで</span></div>
+        <div><span class="s">STEP 1</span><span class="ttl">まずは1回から</span><span>研修か体験会を1回。例：ブラインドサッカー体験（60分）</span></div>
+        <div><span class="s">STEP 2</span><span class="ttl">組み合わせる</span><span>チームの課題に合う座学と体験を選んで組み合わせる</span></div>
+        <div><span class="s">STEP 3</span><span class="ttl">通年で伴走</span><span>月1回の1on1で、目標設定から振り返りまで伴走する</span></div>
       </div>
       <p class="note">シーズン中はオンラインで座学、オフの期間に体験型など、チームの日程に合わせて設計します。</p>
-      <p class="cta">まずは30分ほど、チームの現状とご要望をお聞かせください。</p>
+      <p class="cta">まずは30分ほど、チームの現状とご要望をお聞かせください。<span>オンラインでも伺います</span></p>
     </section>
-  </div>
 
-  <footer>
-    <span class="org">運営：株式会社アスリートバリュー</span>
-    <span><b>鈴木 崇文（代表）</b>元Jリーガー。FC町田ゼルビア、ファジアーノ岡山、ザスパクサツ群馬で9年間プレー。引退後はリクルートキャリアで法人営業を経験し、2022年に当社を設立。</span>
-    <span><b>佐藤 豪（共同代表）</b>日本ブラインドサッカー協会で、体験型の教育プログラムを全国のべ3万人以上に実施。スポGOMIワールドカップの運営に携わる。</span>
-  </footer>
+    <footer>
+      <span class="org">運営：株式会社アスリートバリュー<a href="https://www.athletevalue.jp/">https://www.athletevalue.jp/</a></span>
+      <span><b>鈴木 崇文（代表）</b>元Jリーガー。FC町田ゼルビア、ファジアーノ岡山、ザスパクサツ群馬で9年間プレー。引退後はリクルートキャリアで法人営業を経験し、2022年に当社を設立。</span>
+      <span><b>佐藤 豪（共同代表）</b>日本ブラインドサッカー協会で、体験型の教育プログラムを全国のべ3万人以上に実施。スポGOMIワールドカップの運営に携わる。</span>
+    </footer>
+  </div>
 </main>
 </body>
 </html>
