@@ -4,6 +4,7 @@
 使い方: python3 build_slides.py <出力フォルダ>
 章を増やすときは、content_*.py に DECKS を書き足して、ここで読み込みます。
 """
+import math
 import sys
 from pathlib import Path
 
@@ -84,115 +85,219 @@ def background(slide):
     rect(slide, 0, 0, W, H, BG)
 
 
+# ---- 文字の大きさの見積もり ----------------------------------------------
+def _char_w(ch, size):
+    """1文字の幅（インチ）。全角は1em、半角は0.55em で見積もる。"""
+    return size / 72 * (0.58 if ord(ch) < 0x2E80 else 1.0)
+
+
+def n_lines(value, size, width):
+    n = 0
+    for line in value.split("\n"):
+        w = sum(_char_w(c, size) for c in line)
+        n += max(1, math.ceil(w / (width * 0.94) - 0.02))
+    return n
+
+
+def text_h(value, size, width, spacing=1.25):
+    """折り返しを含めた文字の高さ（インチ）。"""
+    return n_lines(value, size, width) * size * spacing * 1.2 / 72
+
+
+def fit_size(value, width, start, minimum):
+    """幅に収まる最大の文字サイズ（1行で収めたいとき）。太字の数字は幅を広めにみる。"""
+    size = start
+    while size > minimum:
+        w = sum(size / 72 * (0.7 if ord(c) < 0x2E80 else 1.0) for c in value)
+        if w <= width * 0.92:
+            break
+        size -= 1
+    return size
+
+
+# ---- 共通の部品 -----------------------------------------------------------
 def header(slide, label, page):
-    text(slide, LEFT, 0.32, 8, 0.3, f"JLINE METHOD / {label}", 11, True, GRAY, EN)
-    text(slide, RIGHT - 1.5, 0.32, 1.5, 0.3, f"{page:03d}", 11, True, GRAY, EN, PP_ALIGN.RIGHT)
+    text(slide, LEFT, 0.34, 8, 0.3, f"JLINE METHOD / {label}", 12, True, GRAY, EN)
+    text(slide, RIGHT - 1.5, 0.34, 1.5, 0.3, f"{page:03d}", 12, True, GRAY, EN, PP_ALIGN.RIGHT)
+
+
+HEAD = 30
 
 
 def headline(slide, value, sub=None):
     lines = value.count("\n") + 1
-    text(slide, LEFT, 0.85, CONTENT_W, 0.6 * lines, value, 26, True)
-    y = 0.85 + 0.58 * lines
+    pitch = HEAD * 1.2 * 1.2 / 72
+    text(slide, LEFT, 0.8, CONTENT_W, pitch * lines, value, HEAD, True, spacing=1.2)
+    y = 0.8 + pitch * lines
     if sub:
-        text(slide, LEFT, y + 0.05, CONTENT_W, 0.4, sub, 13, False, GRAY)
+        text(slide, LEFT, y + 0.12, CONTENT_W, 0.4, sub, 16, False, GRAY)
         y += 0.5
-    return y + 0.3  # 本文を置き始める位置
+    return y + 0.38  # 本文を置き始める位置
 
 
-def band(slide, y, value, h=0.72):
+def band(slide, y, value, h=0.86, size=20):
     rect(slide, LEFT, y, CONTENT_W, h, INK)
-    text(slide, LEFT + 0.35, y, CONTENT_W - 0.7, h, value, 17, True, WHITE,
+    text(slide, LEFT + 0.4, y, CONTENT_W - 0.8, h, value, size, True, WHITE,
          anchor=MSO_ANCHOR.MIDDLE)
+    return y + h
 
 
-def card(slide, x, y, w, h, title, body="", num=None, dark=False, title_size=17, body_size=13):
-    rect(slide, x, y, w, h, INK if dark else CARD, None if dark else LINE)
-    pad = 0.3
-    ty = y + 0.28
+def place_band(slide, used, value):
+    """本文のすぐ下に帯を置く。下にはみ出す場合は下端にそろえる。"""
+    band(slide, min(H - 0.55 - 0.86, used + 0.42), value)
+
+
+PAD = 0.34
+
+
+def card_need(w, title, body, num, ts, bs):
+    inner = w - 2 * PAD
+    h = PAD * 2
     if num:
-        text(slide, x + pad, ty, w - 2 * pad, 0.25, num, 11, True, RED, EN)
-        ty += 0.36
-    n_title = title.count("\n") + 1
-    title_h = n_title * title_size * 1.3 / 72
-    text(slide, x + pad, ty, w - 2 * pad, title_h, title, title_size, True,
-         WHITE if dark else INK, spacing=1.2)
+        h += 0.42
+    h += text_h(title, ts, inner, 1.2)
     if body:
-        by = ty + title_h + 0.16
-        text(slide, x + pad, by, w - 2 * pad, max(0.3, y + h - by - 0.15), body, body_size, False,
+        h += 0.16 + text_h(body, bs, inner, 1.4)
+    return h
+
+
+def card(slide, x, y, w, h, title, body="", num=None, dark=False, ts=20, bs=16):
+    rect(slide, x, y, w, h, INK if dark else CARD, None if dark else LINE)
+    inner = w - 2 * PAD
+    ty = y + PAD
+    if num:
+        text(slide, x + PAD, ty, inner, 0.3, num, 13, True, RED, EN)
+        ty += 0.42
+    th = text_h(title, ts, inner, 1.2)
+    text(slide, x + PAD, ty, inner, th, title, ts, True, WHITE if dark else INK, spacing=1.2)
+    if body:
+        by = ty + th + 0.16
+        text(slide, x + PAD, by, inner, max(0.3, y + h - by - 0.1), body, bs, False,
              RGBColor(0xDD, 0xDD, 0xDB) if dark else GRAY, spacing=1.4)
 
 
 def sizes(cols):
     if cols >= 5:
-        return 15, 12
+        return 18, 14
     if cols == 4:
-        return 16, 12.5
-    return 18, 14
+        return 19, 15
+    if cols == 3:
+        return 21, 16
+    return 22, 17
 
 
-def grid(slide, top, items, cols, bottom=6.9, gap=0.25, max_h=None):
+def grid(slide, top, items, cols, bottom=6.95, gap=0.26, min_h=1.2):
+    """カードを並べる。高さは中身に合わせ、全カードでそろえる。使った下端を返す。"""
     rows = (len(items) + cols - 1) // cols
     cw = (CONTENT_W - gap * (cols - 1)) / cols
-    ch = (bottom - top - gap * (rows - 1)) / rows
-    if max_h:
-        ch = min(ch, max_h)
+    room = (bottom - top - gap * (rows - 1)) / rows
     ts, bs = sizes(cols)
+    while True:
+        need = max(card_need(cw, it["title"], it.get("body", ""), it.get("num"), ts, bs)
+                   for it in items)
+        if need <= room or bs <= 12:
+            break
+        ts, bs = ts - 1, bs - 1
+    ch = min(room, max(need, min_h))
     for i, it in enumerate(items):
         r, c = divmod(i, cols)
         card(slide, LEFT + c * (cw + gap), top + r * (ch + gap), cw, ch,
              it["title"], it.get("body", ""), it.get("num"), dark=it.get("dark", False),
-             title_size=ts, body_size=bs)
+             ts=ts, bs=bs)
     return top + rows * ch + (rows - 1) * gap
+
+
+def rows_list(slide, top, items, bottom=6.95, gap=0.16, max_h=1.3):
+    """横長の行を縦に並べる。左に番号、中央に見出し、右に説明。"""
+    n = len(items)
+    ts, bs = (22, 18) if n <= 4 else (21, 17)
+    items = [dict(it) for it in items]
+    num_w = 0.95
+    has_body = any(it.get("body") for it in items)
+    title_w = max(sum(_char_w(c, ts) for c in it["title"].replace("\n", "")) for it in items) * 1.08 + 0.55
+    title_w = min(max(title_w, 3.0), 5.6) if has_body else CONTENT_W - num_w - 2 * PAD
+    body_x = LEFT + PAD + num_w + title_w
+    body_w = RIGHT - PAD - body_x
+    for it in items:  # 1行に収まる説明は、改行を外す
+        if it.get("body") and n_lines(it["body"].replace("\n", ""), bs, body_w) == 1:
+            it["body"] = it["body"].replace("\n", "")
+    room = (bottom - top - gap * (n - 1)) / n
+    while True:
+        need = max(max(text_h(it["title"].replace("\n", ""), ts, title_w - 0.3, 1.2),
+                       text_h(it.get("body", ""), bs, body_w, 1.35) if it.get("body") else 0)
+                   for it in items) + 0.16
+        if need <= room or bs <= 13:
+            break
+        ts, bs = ts - 1, bs - 1
+    rh = min(max_h if n > 2 else 1.5, room)
+    for i, it in enumerate(items):
+        y = top + i * (rh + gap)
+        dark = it.get("dark", False)
+        rect(slide, LEFT, y, CONTENT_W, rh, INK if dark else CARD, None if dark else LINE)
+        if it.get("num"):
+            text(slide, LEFT + PAD, y, num_w, rh, it["num"], 20, True, RED, EN,
+                 anchor=MSO_ANCHOR.MIDDLE)
+        text(slide, LEFT + PAD + num_w, y, title_w - 0.3, rh, it["title"].replace("\n", ""), ts, True,
+             WHITE if dark else INK, anchor=MSO_ANCHOR.MIDDLE, spacing=1.2)
+        if it.get("body"):
+            rect(slide, body_x - 0.2, y + 0.24, 0.015, rh - 0.48, LINE)
+            text(slide, body_x, y, body_w, rh, it["body"], bs, False, GRAY,
+                 anchor=MSO_ANCHOR.MIDDLE, spacing=1.35)
+    return top + n * rh + (n - 1) * gap
 
 
 # ---- スライドの種類 -------------------------------------------------------
 def s_cover(slide, d, deck):
     background(slide)
     rect(slide, 0, 0, 0.09, H, RED)
-    text(slide, LEFT, 1.35, 10, 0.4, f"CHAPTER {deck['chapter']}  /  {deck['no']}", 14, True, RED, EN)
-    text(slide, LEFT, 1.75, 11, 1.0, "JLINE METHOD", 54, True, INK, EN)
-    text(slide, LEFT, 3.05, 11.5, 0.8, deck["title"], 30, True)
-    rect(slide, LEFT, 3.95, 0.9, 0.05, RED)
-    text(slide, LEFT, 4.2, 11, 0.5, deck["subtitle"], 15, False, GRAY)
-    text(slide, RIGHT - 6, 6.75, 6, 0.3, "株式会社アスリートバリュー　鈴木崇文", 11, False, GRAY,
+    text(slide, LEFT, 1.3, 10, 0.4, f"CHAPTER {deck['chapter']}  /  {deck['no']}", 16, True, RED, EN)
+    text(slide, LEFT, 1.75, 11, 1.1, "JLINE METHOD", 60, True, INK, EN)
+    text(slide, LEFT, 3.15, 11.5, 0.9, deck["title"], 38, True)
+    rect(slide, LEFT, 4.2, 0.9, 0.06, RED)
+    text(slide, LEFT, 4.5, 11, 0.5, deck["subtitle"], 19, False, GRAY)
+    text(slide, RIGHT - 6, 6.7, 6, 0.3, "株式会社アスリートバリュー　鈴木崇文", 13, False, GRAY,
          align=PP_ALIGN.RIGHT)
 
 
 def s_cards(slide, d, deck):
     top = headline(slide, d["headline"], d.get("sub"))
-    cols = d.get("cols", len(d["items"]))
-    has_body = any(it.get("body") for it in d["items"])
-    rows = (len(d["items"]) + cols - 1) // cols
-    max_h = (2.7 if has_body else 1.9) if rows == 1 else (2.1 if has_body else 1.6)
-    bottom = 5.95 if d.get("band") else 6.9
-    used = grid(slide, top, d["items"], cols, bottom, max_h=max_h)
+    bottom = 5.75 if d.get("band") else 6.95
+    if d.get("layout") == "list":
+        used = rows_list(slide, top, d["items"], bottom)
+    else:
+        cols = d.get("cols", len(d["items"]))
+        used = grid(slide, top, d["items"], cols, bottom)
     if d.get("band"):
-        band(slide, min(6.18, used + 0.4), d["band"])
+        place_band(slide, used, d["band"])
 
 
 def s_statement(slide, d, deck):
-    rect(slide, LEFT, 2.0, 0.09, 2.2, RED)
-    text(slide, LEFT + 0.45, 1.95, CONTENT_W - 0.6, 2.4, d["statement"], 32, True,
-         anchor=MSO_ANCHOR.MIDDLE, spacing=1.35)
+    lines = d["statement"].count("\n") + 1
+    sh = lines * 38 * 1.35 * 1.2 / 72
+    y = 1.9
+    rect(slide, LEFT, y + 0.05, 0.1, sh - 0.1, RED)
+    text(slide, LEFT + 0.5, y, CONTENT_W - 0.6, sh, d["statement"], 38, True, spacing=1.35)
     if d.get("sub"):
-        text(slide, LEFT + 0.45, 4.75, CONTENT_W - 0.6, 1.2, d["sub"], 15, False, GRAY, spacing=1.5)
+        text(slide, LEFT + 0.5, y + sh + 0.55, CONTENT_W - 0.6, 1.3, d["sub"], 19, False, GRAY, spacing=1.55)
 
 
 def s_message(slide, d, deck):
     if d.get("items"):
         top = headline(slide, d["headline"], d.get("sub"))
         cols = d.get("cols", len(d["items"]))
-        ts, bs = sizes(cols)
-        used = grid(slide, top, d["items"], cols, 5.6, max_h=2.3)
-        band(slide, min(6.18, used + 0.4), d["band"])
+        used = grid(slide, top, d["items"], cols, 5.75)
+        place_band(slide, used, d["band"])
         return
     lines = d["headline"].count("\n") + 1
-    rect(slide, LEFT, 1.55, 0.09, 0.62 * lines + 0.2, RED)
-    text(slide, LEFT + 0.45, 1.5, CONTENT_W - 0.6, 0.7 * lines, d["headline"], 32, True, spacing=1.3)
-    y = 1.5 + 0.68 * lines + 0.35
+    hh = lines * 38 * 1.3 * 1.2 / 72
+    y = 1.55
+    rect(slide, LEFT, y + 0.05, 0.1, hh - 0.1, RED)
+    text(slide, LEFT + 0.5, y, CONTENT_W - 0.6, hh, d["headline"], 38, True, spacing=1.3)
+    y += hh + 0.35
     if d.get("sub"):
-        text(slide, LEFT + 0.45, y, CONTENT_W - 0.6, 0.5, d["sub"], 15, False, GRAY)
-    band(slide, 5.2, d["band"], h=0.95)
+        text(slide, LEFT + 0.5, y, CONTENT_W - 0.6, 0.5, d["sub"], 19, False, GRAY)
+        y += 0.5
+    band(slide, max(4.9, y + 0.6), d["band"], h=1.05, size=23)
 
 
 def s_flow(slide, d, deck):
@@ -200,115 +305,134 @@ def s_flow(slide, d, deck):
     items = d["items"]
     per_row = d.get("per_row", len(items))
     rows = (len(items) + per_row - 1) // per_row
-    gap = 0.32
+    gap = 0.2 if per_row > 4 else 0.34
     bw = (CONTENT_W - gap * (per_row - 1)) / per_row
-    bottom = 5.95 if d.get("band") else 6.9
-    bh = min(2.4 if rows == 1 else 1.75, (bottom - top - 0.35 * (rows - 1)) / rows)
+    pad = 0.15 if per_row > 4 else 0.3
+    inner = bw - 2 * pad
+    ts = 18 if per_row > 4 else 20
+    bs = 14 if per_row > 4 else 15
+    t_need = max(text_h(it["title"], ts, inner, 1.2) for it in items)
+    b_need = max((text_h(it["body"], bs, inner, 1.3) for it in items if it.get("body")), default=0)
+    need = pad + 0.42 + t_need + (0.3 + b_need if b_need else 0) + pad
+    bottom = 5.75 if d.get("band") else 6.95
+    bh = min(max(need, 1.6), (bottom - top - gap * (rows - 1)) / rows)
     for i, it in enumerate(items):
         r, c = divmod(i, per_row)
         x = LEFT + c * (bw + gap)
-        y = top + r * (bh + 0.35)
+        y = top + r * (bh + gap)
         dark = it.get("dark", False)
         rect(slide, x, y, bw, bh, INK if dark else CARD, None if dark else LINE)
-        text(slide, x + 0.2, y + 0.2, bw - 0.4, 0.25, f"{i + 1:02d}", 11, True, RED, EN)
-        text(slide, x + 0.2, y + 0.5, bw - 0.4, 0.8, it["title"], 15 if per_row <= 4 else 14, True,
+        text(slide, x + pad, y + pad, inner, 0.3, f"{i + 1:02d}", 13, True, RED, EN)
+        text(slide, x + pad, y + pad + 0.42, inner, t_need, it["title"], ts, True,
              WHITE if dark else INK, spacing=1.2)
         if it.get("body"):
-            text(slide, x + 0.2, y + bh - 0.62, bw - 0.4, 0.5, it["body"], 12 if per_row <= 4 else 11, False,
-                 RGBColor(0xDD, 0xDD, 0xDB) if dark else GRAY, spacing=1.25)
+            text(slide, x + pad, y + bh - pad - b_need, inner, b_need, it["body"], bs, False,
+                 RGBColor(0xDD, 0xDD, 0xDB) if dark else GRAY, spacing=1.3)
         if c < per_row - 1 and i < len(items) - 1:
-            text(slide, x + bw, y + bh / 2 - 0.17, gap, 0.3, "→", 14, True, RED, align=PP_ALIGN.CENTER)
+            text(slide, x + bw, y + bh / 2 - 0.2, gap, 0.4, "→", 16, True, RED, align=PP_ALIGN.CENTER)
     if d.get("band"):
-        last = top + rows * bh + (rows - 1) * 0.35
-        band(slide, min(6.18, last + 0.45), d["band"])
+        place_band(slide, top + rows * bh + (rows - 1) * gap, d["band"])
 
 
 def s_numbers(slide, d, deck):
     top = headline(slide, d["headline"], d.get("sub"))
     items = d["items"]
     n = len(items)
-    gap = 0.3
+    gap = 0.34
     arrows = d.get("arrows", False)
     cw = (CONTENT_W - gap * (n - 1)) / n
-    ch = 2.5
+    pad = 0.28
+    inner = cw - 2 * pad
+    big = min(fit_size(it["value"], inner, 60, 28) for it in items)
+    note_h = max((text_h(it["note"], 14, inner, 1.3) for it in items if it.get("note")), default=0)
+    ch = pad + 0.45 + big * 1.25 / 72 + 0.15 + note_h + pad
     for i, it in enumerate(items):
         x = LEFT + i * (cw + gap)
         rect(slide, x, top, cw, ch, CARD, LINE)
-        text(slide, x + 0.28, top + 0.28, cw - 0.56, 0.3, it["label"], 13, True, INK)
-        big = 48 if len(it["value"]) <= 5 else (38 if len(it["value"]) <= 8 else 30)
-        text(slide, x + 0.28, top + 0.72, cw - 0.56, 1.0, it["value"], big, True, RED, EN)
+        text(slide, x + pad, top + pad, inner, 0.35, it["label"], 16, True, INK)
+        text(slide, x + pad, top + pad + 0.45, inner, big * 1.25 / 72, it["value"], big, True, RED, EN,
+             spacing=1.0)
         if it.get("note"):
-            text(slide, x + 0.28, top + ch - 0.6, cw - 0.56, 0.45, it["note"], 12, False, GRAY)
+            text(slide, x + pad, top + ch - pad - note_h, inner, note_h, it["note"], 14, False, GRAY,
+                 spacing=1.3)
         if arrows and i < n - 1:
-            text(slide, x + cw, top + ch / 2 - 0.17, gap, 0.3, "→", 14, True, RED, align=PP_ALIGN.CENTER)
-    y = top + ch + 0.3
+            text(slide, x + cw, top + ch / 2 - 0.2, gap, 0.4, "→", 16, True, RED, align=PP_ALIGN.CENTER)
+    y = top + ch
     if d.get("note"):
-        text(slide, LEFT, y, CONTENT_W, 0.5, d["note"], 13, False, GRAY, spacing=1.4)
-        y += 0.55
+        text(slide, LEFT, y + 0.3, CONTENT_W, 0.5, d["note"], 16, False, INK, spacing=1.4)
+        y += 0.75
     if d.get("band"):
-        band(slide, min(6.18, y + 0.15), d["band"])
+        place_band(slide, y, d["band"])
 
 
 def s_compare(slide, d, deck):
     top = headline(slide, d["headline"], d.get("sub"))
-    gap = 0.3
+    gap = 0.34
     cw = (CONTENT_W - gap) / 2
     rows = d["rows"]
-    rect(slide, LEFT, top, cw, 0.6, CARD, LINE)
-    text(slide, LEFT + 0.3, top, cw - 0.6, 0.6, d["left"], 15, True, GRAY, anchor=MSO_ANCHOR.MIDDLE)
-    rect(slide, LEFT + cw + gap, top, cw, 0.6, INK)
-    text(slide, LEFT + cw + gap + 0.3, top, cw - 0.6, 0.6, d["right"], 15, True, WHITE,
+    hh = 0.72
+    rect(slide, LEFT, top, cw, hh, CARD, LINE)
+    text(slide, LEFT + 0.35, top, cw - 0.7, hh, d["left"], 18, True, GRAY, anchor=MSO_ANCHOR.MIDDLE)
+    rect(slide, LEFT + cw + gap, top, cw, hh, INK)
+    text(slide, LEFT + cw + gap + 0.35, top, cw - 0.7, hh, d["right"], 18, True, WHITE,
          anchor=MSO_ANCHOR.MIDDLE)
-    rh = (6.9 - top - 0.75) / len(rows)
+    rh = min(1.1, (6.95 - top - hh - 0.1) / len(rows))
     for i, (l, r) in enumerate(rows):
-        y = top + 0.75 + i * rh
+        y = top + hh + 0.1 + i * rh
         rect(slide, LEFT, y + rh - 0.02, CONTENT_W, 0.015, LINE)
-        text(slide, LEFT + 0.3, y, cw - 0.6, rh, l, 14, False, GRAY, anchor=MSO_ANCHOR.MIDDLE)
-        text(slide, LEFT + cw + gap + 0.3, y, cw - 0.6, rh, r, 14, True, INK, anchor=MSO_ANCHOR.MIDDLE)
-        text(slide, LEFT + cw - 0.1, y, gap + 0.2, rh, "→", 14, True, RED, align=PP_ALIGN.CENTER,
+        text(slide, LEFT + 0.35, y, cw - 0.7, rh, l, 18, False, GRAY, anchor=MSO_ANCHOR.MIDDLE)
+        text(slide, LEFT + cw + gap + 0.35, y, cw - 0.7, rh, r, 19, True, INK, anchor=MSO_ANCHOR.MIDDLE)
+        text(slide, LEFT + cw - 0.1, y, gap + 0.2, rh, "→", 18, True, RED, align=PP_ALIGN.CENTER,
              anchor=MSO_ANCHOR.MIDDLE)
 
 
 def s_timeline(slide, d, deck):
-    top = headline(slide, d["headline"], d.get("sub"))
+    top = headline(slide, d["headline"], d.get("sub")) + 0.05
     items = d["items"]
-    rh = (6.9 - top) / len(items)
-    rect(slide, LEFT + 1.95, top + 0.12, 0.03, rh * (len(items) - 1) + 0.05, LINE)
+    rh = min(0.88, (6.95 - top) / len(items))
+    dx = LEFT + 2.25
+    rect(slide, dx + 0.1, top + 0.2, 0.03, rh * (len(items) - 1), LINE)
     for i, it in enumerate(items):
         y = top + i * rh
-        text(slide, LEFT, y, 1.8, 0.35, it["date"], 14, True, INK, EN if it["date"].isascii() else JP)
-        dot = slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(LEFT + 1.87), Inches(y + 0.06),
-                                     Inches(0.19), Inches(0.19))
+        text(slide, LEFT, y, 2.0, 0.4, it["date"], 17, True, INK, EN if it["date"].isascii() else JP)
+        dot = slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(dx), Inches(y + 0.1),
+                                     Inches(0.23), Inches(0.23))
         dot.fill.solid()
         dot.fill.fore_color.rgb = RED if it.get("accent") else INK
         dot.line.fill.background()
-        text(slide, LEFT + 2.35, y - 0.02, CONTENT_W - 2.35, 0.35, it["title"], 15, True)
+        text(slide, dx + 0.55, y, RIGHT - dx - 0.55, 0.42, it["title"], 19, True)
         if it.get("body"):
-            text(slide, LEFT + 2.35, y + 0.34, CONTENT_W - 2.35, 0.35, it["body"], 11.5, False, GRAY)
+            text(slide, dx + 0.55, y + 0.42, RIGHT - dx - 0.55, 0.35, it["body"], 14, False, GRAY)
 
 
 def s_work(slide, d, deck):
     top = headline(slide, d["headline"], d.get("sub"))
-    text(slide, LEFT, top - 0.05, 2, 0.3, "WORK", 12, True, RED, EN)
-    rect(slide, LEFT, top + 0.35, CONTENT_W, 6.9 - top - 0.35, WHITE, LINE)
-    y = top + 0.7
+    text(slide, LEFT, top - 0.08, 2, 0.32, "WORK", 14, True, RED, EN)
+    box_top = top + 0.36
+    hint_h = 0.6 if d.get("hint") else 0
+    rect(slide, LEFT, box_top, CONTENT_W, 6.95 - box_top, WHITE, LINE)
+    n = len(d["lines"])
+    pitch = min(1.15, (6.95 - box_top - 0.5 - hint_h) / n)
+    y = box_top + 0.45
     for line in d["lines"]:
-        text(slide, LEFT + 0.4, y, CONTENT_W - 0.8, 0.35, line, 14, True)
-        y += 0.42
-        rect(slide, LEFT + 0.4, y + 0.25, CONTENT_W - 0.8, 0.012, LINE)
-        y += d.get("line_gap", 0.55)
+        text(slide, LEFT + 0.5, y, CONTENT_W - 1.0, 0.45, line, 20, True)
+        rect(slide, LEFT + 0.5, y + 0.6, CONTENT_W - 1.0, 0.012, LINE)
+        y += pitch
     if d.get("hint"):
-        text(slide, LEFT + 0.4, 6.35, CONTENT_W - 0.8, 0.35, d["hint"], 11.5, False, GRAY)
+        text(slide, LEFT + 0.5, 6.95 - 0.3 - 0.35, CONTENT_W - 1.0, 0.35, d["hint"], 14, False, GRAY)
 
 
 def s_summary(slide, d, deck):
     top = headline(slide, d.get("headline", "まとめ"))
     y = top
+    rh, gap = 0.9, 0.18
     for item in d["checks"]:
-        rect(slide, LEFT, y + 0.07, 0.22, 0.22, WHITE, INK)
-        text(slide, LEFT + 0.4, y, CONTENT_W - 0.4, 0.4, item, 16, True)
-        y += 0.62
-    band(slide, 6.0, f"次の回　{d['next']}", h=0.9)
+        rect(slide, LEFT, y, CONTENT_W, rh, CARD, LINE)
+        rect(slide, LEFT + 0.38, y + rh / 2 - 0.15, 0.3, 0.3, WHITE, INK)
+        text(slide, LEFT + 0.42, y + rh / 2 - 0.2, 0.25, 0.4, "✓", 16, True, RED, align=PP_ALIGN.CENTER)
+        text(slide, LEFT + 0.95, y, CONTENT_W - 1.3, rh, item, 21, True, anchor=MSO_ANCHOR.MIDDLE)
+        y += rh + gap
+    band(slide, y + 0.32, f"次の回　{d['next']}", h=0.95, size=21)
 
 
 RENDER = {
