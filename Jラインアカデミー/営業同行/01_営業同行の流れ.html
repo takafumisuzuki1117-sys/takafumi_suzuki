@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スポンサー営業同行の流れ</title>
+<style>
+  @page { size: A4; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+         color: #1f2933; background: #fff; margin: 0; font-size: 10pt; line-height: 1.55; }
+  .page { max-width: 190mm; margin: 0 auto; padding: 6mm 0; }
+  header { border-bottom: 3px solid #0b4f8a; padding-bottom: 5px; margin-bottom: 8px; }
+  .eyebrow { font-size: 8.5pt; color: #0b4f8a; font-weight: bold; letter-spacing: .05em; }
+  h1 { font-size: 15pt; margin: 2px 0 3px; }
+  .meta { font-size: 8.5pt; color: #52606d; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+  h2 { font-size: 11pt; margin: 13px 0 5px; padding-left: 7px; border-left: 4px solid #0b4f8a; }
+  p { margin: 0 0 4px; }
+  ul { margin: 0; padding-left: 1.3em; }
+  li { margin: 1px 0; }
+  .aim { background: #eef4fa; border-radius: 6px; padding: 6px 10px; }
+  .aim b { color: #0b4f8a; }
+  .summary { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; font-size: 9pt; }
+  .summary div { background: #f5f7fa; border-radius: 6px; padding: 3px 9px; }
+  .chain { display: flex; align-items: stretch; gap: 4px; margin: 6px 0 6px; }
+  .chain .step { flex: 1 1 0; background: #eef4fa; border: 1px solid #b6cde3; border-radius: 6px; min-height: 17mm;
+                 padding: 5px 6px; text-align: center; }
+  .chain .step .no { display: inline-block; background: #0b4f8a; color: #fff; border-radius: 10px;
+                     font-size: 8pt; font-weight: bold; padding: 0 7px; }
+  .chain .step .name { display: block; font-weight: bold; font-size: 10pt; margin: 2px 0 1px; }
+  .chain .step .when { display: block; font-size: 8pt; color: #52606d; }
+  .chain .arrow { align-self: center; color: #0b4f8a; font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.4pt; table-layout: fixed; }
+  th, td { border: 1px solid #cbd2d9; padding: 6px 6px; vertical-align: top; text-align: left; }
+  thead th { background: #0b4f8a; color: #fff; text-align: center; }
+  tbody th { background: #f5f7fa; width: 5.2em; }
+  tr.player td { background: #fbfdff; }
+  tr.player th { background: #dfeaf5; color: #0b4f8a; }
+  td.none { color: #9aa5b1; text-align: center; vertical-align: middle; }
+  .sheet { display: inline-block; background: #fff4e5; color: #8a4b00; border-radius: 4px; padding: 0 4px; font-size: 8pt; margin-top: 2px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .box { border: 1px solid #cbd2d9; border-radius: 6px; padding: 6px 10px; }
+  .box h3 { font-size: 9.5pt; margin: 0 0 3px; color: #0b4f8a; }
+  .note { font-size: 8.5pt; color: #52606d; margin-top: 5px; }
+  @media print { .page { padding: 0; max-width: none; } }
+  @media (max-width: 600px) {
+    .page { padding: 16px; }
+    .chain { flex-direction: column; }
+    .chain .arrow { transform: rotate(90deg); }
+    .cols { grid-template-columns: 1fr; }
+    .swim { overflow-x: auto; }
+    .swim table { min-width: 640px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">JLINEアカデミー｜スポンサー営業同行</div>
+    <h1>スポンサー営業同行の流れ</h1>
+    <div class="meta"><span>カターレ富山 若手選手向け</span><span>2026年11月　鈴木 崇文</span></div>
+  </header>
+
+  <h2>この同行のねらい</h2>
+  <div class="aim">
+    選手が何かを提案する場ではありません。<b>スポンサーがクラブに何を期待しているか</b>、それに対して<b>クラブが何を提供しているか</b>を、営業の現場で知る場です。知ったことを「ピッチ上の結果の先にある期待」として自分ごとにし、競技につなげます。
+  </div>
+  <div class="summary">
+    <div>対象：プロ3年目までの選手</div>
+    <div>1社につき：選手1〜2名</div>
+    <div>時期（予定）：11月末〜12月上旬／2027年3月頃</div>
+  </div>
+
+  <h2>全体の流れ：「行って終わり」にしない</h2>
+  <div class="chain">
+    <div class="step"><span class="no">STEP 1</span><span class="name">事前1on1</span><span class="when">訪問の約1週間前</span></div>
+    <span class="arrow">▶</span>
+    <div class="step"><span class="no">STEP 2</span><span class="name">企業研究</span><span class="when">訪問の2日前までに提出</span></div>
+    <span class="arrow">▶</span>
+    <div class="step"><span class="no">STEP 3</span><span class="name">同行（当日）</span><span class="when">訪問日</span></div>
+    <span class="arrow">▶</span>
+    <div class="step"><span class="no">STEP 4</span><span class="name">振り返り</span><span class="when">訪問の3日後までに提出</span></div>
+    <span class="arrow">▶</span>
+    <div class="step"><span class="no">STEP 5</span><span class="name">発表</span><span class="when">後日（日程は追って連絡）</span></div>
+  </div>
+
+  <div class="swim">
+  <table>
+    <thead>
+      <tr><th style="width:5.2em"></th><th>STEP 1<br>事前1on1</th><th>STEP 2<br>企業研究</th><th>STEP 3<br>同行（当日）</th><th>STEP 4<br>振り返り</th><th>STEP 5<br>発表</th></tr>
+    </thead>
+    <tbody>
+      <tr class="player">
+        <th>選手</th>
+        <td>この同行で知りたいこと・得たいことを、鈴木と話して言葉にする（30分・オンライン）</td>
+        <td>会社を調べ、「魅力」「いま取り組んでいること」「クラブへの期待」の仮説を立てる<br><span class="sheet">事前調査シート</span></td>
+        <td>行きの車中で「今日はどういう場か」を聞く → 商談に同席 → その日のうちに当日メモを書く<br><span class="sheet">振り返りシート A</span></td>
+        <td>仮説と実際を見比べてレポートを仕上げる。次の1on1で深掘りし、競技で試す行動を1つ決める<br><span class="sheet">振り返りシート B〜E</span></td>
+        <td>学んだことを3分で発表する。営業担当の方にお礼を伝える</td>
+      </tr>
+      <tr>
+        <th>鈴木</th>
+        <td>訪問先の情報と、事前調査シートの書き方を伝える</td>
+        <td>シートにコメントを返す</td>
+        <td>集合時間・場所・服装を事前に連絡する</td>
+        <td>レポートにコメントを返し、1on1で一緒に振り返る</td>
+        <td>発表の場を用意する</td>
+      </tr>
+      <tr>
+        <th>営業担当</th>
+        <td class="none">−</td>
+        <td class="none">−</td>
+        <td>行きの車中で、今日の訪問の目的と流れを伝える</td>
+        <td>（任意）選手へひと言</td>
+        <td>（可能であれば）発表を聞いていただく</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="cols" style="margin-top:10px">
+    <div class="box">
+      <h3>当日の約束</h3>
+      <ul>
+        <li>商談の中身（金額や条件など）は、ほかの人に話さない。SNSにも書かない</li>
+        <li>主役は営業担当とお客様。話を振られたら、自分の言葉で答える</li>
+        <li>30秒の自己紹介（名前・ポジション・出身・プロ何年目か）を準備しておく</li>
+        <li>集合時間・場所・服装は、事前の連絡に従う</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>シートの出し方</h3>
+      <ul>
+        <li><b>事前調査シート</b>：訪問の2日前までに提出</li>
+        <li><b>振り返りシート</b>：当日メモ（A）はその日のうちに書き、全体を訪問の3日後までに提出</li>
+        <li>書いたシートは、写真かデータで鈴木にLINEで送る</li>
+      </ul>
+      <p class="note">正解を書く必要はありません。自分で調べて、自分の言葉で考えることが目的です。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
