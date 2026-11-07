@@ -435,10 +435,44 @@ def s_summary(slide, d, deck):
     band(slide, y + 0.32, f"次の回　{d['next']}", h=0.95, size=21)
 
 
+def s_report(slide, d, deck):
+    """章末レポート。左に質問、右に今の状態チェック（ある場合）。"""
+    top = headline(slide, d["headline"], d.get("sub"))
+    has_check = bool(d.get("checks"))
+    gap = 0.34
+    left_w = CONTENT_W * 0.58 if has_check else CONTENT_W
+    text(slide, LEFT, top - 0.08, 3, 0.32, "REPORT", 14, True, RED, EN)
+    y0 = top + 0.36
+    bottom = 6.95
+    n = len(d["questions"])
+    qgap = 0.16
+    rh = min(1.35, (bottom - y0 - qgap * (n - 1)) / n)
+    for i, q in enumerate(d["questions"]):
+        y = y0 + i * (rh + qgap)
+        rect(slide, LEFT, y, left_w, rh, CARD, LINE)
+        text(slide, LEFT + PAD, y, 0.8, rh, f"Q{i + 1}", 22, True, RED, EN, anchor=MSO_ANCHOR.MIDDLE)
+        text(slide, LEFT + PAD + 0.8, y, left_w - 2 * PAD - 0.8, rh, q, 20, True,
+             anchor=MSO_ANCHOR.MIDDLE)
+    if has_check:
+        x = LEFT + left_w + gap
+        w = CONTENT_W - left_w - gap
+        box_h = n * rh + (n - 1) * qgap
+        rect(slide, x, y0, w, box_h, INK)
+        text(slide, x + 0.35, y0 + 0.3, w - 0.7, 0.4, d["check_title"], 18, True, WHITE)
+        y = y0 + 0.88
+        for c in d["checks"]:
+            rect(slide, x + 0.35, y + 0.07, 0.24, 0.24, INK, WHITE)
+            text(slide, x + 0.75, y, w - 1.1, 0.4, c, 16, False, WHITE)
+            y += 0.5
+        if d.get("check_note"):
+            text(slide, x + 0.35, y0 + box_h - 0.25 - 0.62, w - 0.7, 0.62, d["check_note"], 13, False,
+                 RGBColor(0xBB, 0xBB, 0xB8), spacing=1.35)
+
+
 RENDER = {
     "cover": s_cover, "cards": s_cards, "statement": s_statement, "message": s_message,
     "flow": s_flow, "numbers": s_numbers, "compare": s_compare, "timeline": s_timeline,
-    "work": s_work, "summary": s_summary,
+    "work": s_work, "summary": s_summary, "report": s_report,
 }
 
 
