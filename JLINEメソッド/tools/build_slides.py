@@ -53,6 +53,9 @@ CONTENT_W = RIGHT - LEFT
 def _set_fonts(run, latin, east_asian=JP):
     run.font.name = latin
     rpr = run._r.get_or_add_rPr()
+    # 日本語として扱う指定。これがないと、フォントがない環境で中国語の字形に置き換わることがある
+    rpr.set("lang", "ja-JP")
+    rpr.set("altLang", "en-US")
     for tag in ("a:ea", "a:cs"):
         el = rpr.find(qn(tag))
         if el is None:
