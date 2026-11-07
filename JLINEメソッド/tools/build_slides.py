@@ -30,7 +30,7 @@ def _load(ch):
 
 
 # 章ごとの中身と台本
-CHAPTERS = {ch: _load(ch) for ch in ("0", "1", "2")}
+CHAPTERS = {ch: _load(ch) for ch in ("0", "1", "2", "3")}
 
 # ---- デザインの基本 -------------------------------------------------------
 BG = RGBColor(0xFA, 0xFA, 0xF8)      # 生成り色の背景
