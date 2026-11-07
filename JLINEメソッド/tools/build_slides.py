@@ -16,21 +16,21 @@ from pptx.oxml.ns import qn
 from pptx.util import Emu, Inches, Pt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import content_ch0  # noqa: E402
-import content_ch1  # noqa: E402
-import notes_ch0  # noqa: E402
+import importlib  # noqa: E402
 
-try:
-    import notes_ch1  # noqa: E402
-    _NOTES1 = notes_ch1.NOTES
-except ImportError:
-    _NOTES1 = {}
+
+def _load(ch):
+    """content_chN（スライド）と notes_chN（台本。まだなければ空）を読み込む。"""
+    content = importlib.import_module(f"content_ch{ch}")
+    try:
+        notes = importlib.import_module(f"notes_ch{ch}").NOTES
+    except ImportError:
+        notes = {}
+    return content.DECKS, notes
+
 
 # 章ごとの中身と台本
-CHAPTERS = {
-    "0": (content_ch0.DECKS, notes_ch0.NOTES),
-    "1": (content_ch1.DECKS, _NOTES1),
-}
+CHAPTERS = {ch: _load(ch) for ch in ("0", "1", "2")}
 
 # ---- デザインの基本 -------------------------------------------------------
 BG = RGBColor(0xFA, 0xFA, 0xF8)      # 生成り色の背景
