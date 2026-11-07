@@ -1,8 +1,8 @@
 """JLINEメソッド 教材スライドを作るスクリプト。
 
 デザインは JLINE PERSONAL の提案資料（生成り色の背景・黒・赤）に合わせています。
-使い方: python3 build_slides.py <出力フォルダ>
-章を増やすときは、content_*.py に DECKS を書き足して、ここで読み込みます。
+使い方: python3 build_slides.py <出力フォルダ> [章番号 ...]
+章を増やすときは、content_chN.py（スライド）と notes_chN.py（台本）を作り、CHAPTERS に足します。
 """
 import math
 import sys
@@ -16,8 +16,21 @@ from pptx.oxml.ns import qn
 from pptx.util import Emu, Inches, Pt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from content_ch0 import DECKS  # noqa: E402
-from notes_ch0 import NOTES  # noqa: E402
+import content_ch0  # noqa: E402
+import content_ch1  # noqa: E402
+import notes_ch0  # noqa: E402
+
+try:
+    import notes_ch1  # noqa: E402
+    _NOTES1 = notes_ch1.NOTES
+except ImportError:
+    _NOTES1 = {}
+
+# 章ごとの中身と台本
+CHAPTERS = {
+    "0": (content_ch0.DECKS, notes_ch0.NOTES),
+    "1": (content_ch1.DECKS, _NOTES1),
+}
 
 # ---- デザインの基本 -------------------------------------------------------
 BG = RGBColor(0xFA, 0xFA, 0xF8)      # 生成り色の背景
@@ -441,7 +454,7 @@ def s_report(slide, d, deck):
     top = headline(slide, d["headline"], d.get("sub"))
     has_check = bool(d.get("checks"))
     gap = 0.34
-    left_w = CONTENT_W * 0.58 if has_check else CONTENT_W
+    left_w = CONTENT_W * 0.58 if (has_check or d.get("fields")) else CONTENT_W
     text(slide, LEFT, top - 0.08, 3, 0.32, "REPORT", 14, True, RED, EN)
     y0 = top + 0.36
     bottom = 6.95
@@ -454,6 +467,20 @@ def s_report(slide, d, deck):
         text(slide, LEFT + PAD, y, 0.8, rh, f"Q{i + 1}", 22, True, RED, EN, anchor=MSO_ANCHOR.MIDDLE)
         text(slide, LEFT + PAD + 0.8, y, left_w - 2 * PAD - 0.8, rh, q, 20, True,
              anchor=MSO_ANCHOR.MIDDLE)
+    if d.get("fields"):
+        x = LEFT + left_w + gap
+        w = CONTENT_W - left_w - gap
+        box_h = n * rh + (n - 1) * qgap
+        rect(slide, x, y0, w, box_h, INK)
+        text(slide, x + 0.35, y0 + 0.3, w - 0.7, 0.4, d["fields_title"], 18, True, WHITE)
+        y = y0 + 1.0
+        for f in d["fields"]:
+            text(slide, x + 0.35, y, w - 0.7, 0.35, f, 15, True, RGBColor(0xDD, 0xDD, 0xDB))
+            rect(slide, x + 0.35, y + 0.72, w - 0.7, 0.015, RGBColor(0x88, 0x88, 0x88))
+            y += 0.85
+        if d.get("fields_note"):
+            text(slide, x + 0.35, y0 + box_h - 0.25 - 0.62, w - 0.7, 0.62, d["fields_note"], 13, False,
+                 RGBColor(0xBB, 0xBB, 0xB8), spacing=1.35)
     if has_check:
         x = LEFT + left_w + gap
         w = CONTENT_W - left_w - gap
@@ -487,8 +514,8 @@ def slide_title(d, deck):
     return d["headline"].replace("\n", "")
 
 
-def build(deck, out_dir):
-    notes = NOTES.get(deck["no"])
+def build(deck, out_dir, notes_map):
+    notes = notes_map.get(deck["no"])
     if notes is not None and len(notes) != len(deck["slides"]):
         raise ValueError(f"{deck['no']}: 台本 {len(notes)} 本とスライド {len(deck['slides'])} 枚が合いません")
     prs = Presentation()
@@ -507,12 +534,12 @@ def build(deck, out_dir):
     return path
 
 
-def write_script(decks, out_dir, chapter):
+def write_script(decks, notes_map, out_dir, chapter):
     """スマホで見られる台本（Markdown）を書き出す。"""
     lines = [f"# JLINEメソッド {chapter}章 台本", "",
              "1枚あたり約1分。【ここは自分の言葉で：…】は、自分の体験で話すところ。", ""]
     for deck in decks:
-        notes = NOTES.get(deck["no"])
+        notes = notes_map.get(deck["no"])
         if not notes:
             continue
         lines += [f"## {deck['no']} {deck['title']}", ""]
@@ -525,8 +552,14 @@ def write_script(decks, out_dir, chapter):
 
 
 if __name__ == "__main__":
+    # 使い方: python3 build_slides.py <出力フォルダ> [章番号 ...]（章を省くと全章）
     out = Path(sys.argv[1] if len(sys.argv) > 1 else ".")
-    out.mkdir(parents=True, exist_ok=True)
-    for deck in DECKS:
-        print(build(deck, out))
-    print(write_script(DECKS, out, DECKS[0]["chapter"]))
+    chapters = sys.argv[2:] or list(CHAPTERS)
+    for ch in chapters:
+        decks, notes_map = CHAPTERS[ch]
+        ch_out = out / f"{ch}章" if len(chapters) > 1 else out
+        ch_out.mkdir(parents=True, exist_ok=True)
+        for deck in decks:
+            print(build(deck, ch_out, notes_map))
+        if notes_map:
+            print(write_script(decks, notes_map, ch_out, ch))
