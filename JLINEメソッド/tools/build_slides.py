@@ -17,6 +17,7 @@ from pptx.util import Emu, Inches, Pt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from content_ch0 import DECKS  # noqa: E402
+from notes_ch0 import NOTES  # noqa: E402
 
 # ---- デザインの基本 -------------------------------------------------------
 BG = RGBColor(0xFA, 0xFA, 0xF8)      # 生成り色の背景
@@ -476,7 +477,20 @@ RENDER = {
 }
 
 
+def slide_title(d, deck):
+    if d["type"] == "cover":
+        return f"表紙　{deck['title']}"
+    if d["type"] == "statement":
+        return d["statement"].replace("\n", "")
+    if d["type"] == "summary":
+        return "まとめ"
+    return d["headline"].replace("\n", "")
+
+
 def build(deck, out_dir):
+    notes = NOTES.get(deck["no"])
+    if notes is not None and len(notes) != len(deck["slides"]):
+        raise ValueError(f"{deck['no']}: 台本 {len(notes)} 本とスライド {len(deck['slides'])} 枚が合いません")
     prs = Presentation()
     prs.slide_width, prs.slide_height = Inches(W), Inches(H)
     blank = prs.slide_layouts[6]
@@ -486,8 +500,27 @@ def build(deck, out_dir):
             background(slide)
             header(slide, f"{deck['no']} {deck['label']}", i)
         RENDER[d["type"]](slide, d, deck)
+        if notes:
+            slide.notes_slide.notes_text_frame.text = notes[i - 1]
     path = Path(out_dir) / f"{deck['no']}_{deck['title']}.pptx"
     prs.save(path)
+    return path
+
+
+def write_script(decks, out_dir, chapter):
+    """スマホで見られる台本（Markdown）を書き出す。"""
+    lines = [f"# JLINEメソッド {chapter}章 台本", "",
+             "1枚あたり約1分。【ここは自分の言葉で：…】は、自分の体験で話すところ。", ""]
+    for deck in decks:
+        notes = NOTES.get(deck["no"])
+        if not notes:
+            continue
+        lines += [f"## {deck['no']} {deck['title']}", ""]
+        for i, (d, n) in enumerate(zip(deck["slides"], notes), 1):
+            lines += [f"### {i}. {slide_title(d, deck)}", ""]
+            lines += [ln + "  " for ln in n.split("\n")] + [""]
+    path = Path(out_dir) / f"{chapter}章_台本.md"
+    path.write_text("\n".join(lines), encoding="utf-8")
     return path
 
 
@@ -496,3 +529,4 @@ if __name__ == "__main__":
     out.mkdir(parents=True, exist_ok=True)
     for deck in DECKS:
         print(build(deck, out))
+    print(write_script(DECKS, out, DECKS[0]["chapter"]))
